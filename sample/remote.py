@@ -1,6 +1,7 @@
 import os, sys, time, json
 from webwhatsapi import WhatsAPIDriver
 from webwhatsapi.objects.message import Message, MediaMessage
+from pathlib import Path
 
 print ("Environment", os.environ)
 try:
@@ -49,7 +50,7 @@ while True:
                 print ('mime', message.mime)
                 print ('caption', message.caption)
                 print ('client_url', message.client_url)
-                dirName="storage/"+message.chat_id['user']
+                dirName=os.path.join(Path.home(), "wphotos", message.chat_id['user'])
                 if not os.path.exists(dirName):
                     os.mkdir(dirName)
                     print("Directory " , dirName ,  " created ")
