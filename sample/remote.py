@@ -1,7 +1,6 @@
 import os, sys, time, json
 from webwhatsapi import WhatsAPIDriver
 from webwhatsapi.objects.message import Message, MediaMessage
-from pathlib import Path
 
 print ("Environment", os.environ)
 try:
@@ -15,7 +14,9 @@ except KeyError:
 ##The "app" directory is internal to docker, it corresponds to the root of the project.
 ##The profile parameter requires a directory not a file.
 profiledir=os.path.join(".","firefox_cache")
-if not os.path.exists(profiledir): os.makedirs(profiledir)
+if not os.path.exists(profiledir): 
+    os.makedirs(profiledir)
+
 driver = WhatsAPIDriver(profile=profiledir, client='remote', command_executor=os.environ["SELENIUM"])
 print("Waiting for QR")
 driver.wait_for_login()
@@ -50,7 +51,7 @@ while True:
                 print ('mime', message.mime)
                 print ('caption', message.caption)
                 print ('client_url', message.client_url)
-                dirName=os.path.join(Path.home(), "wphotos", message.chat_id['user'])
+                dirName=os.path.join("wphotos", message.chat_id['user'])
                 if not os.path.exists(dirName):
                     os.mkdir(dirName)
                     print("Directory " , dirName ,  " created ")
