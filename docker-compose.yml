@@ -16,7 +16,7 @@ services:
   whatsapp_994704414285:
      build: .
      environment:
-       - SELENIUM=http://firefox_1:4444/wd/hub
+       - SELENIUM=http://firefox_994704414285:4444/wd/hub
        - MOBILE_NUMBER=994704414285
      volumes:
        - ".:/app"
@@ -41,7 +41,7 @@ services:
   whatsapp_994704414286:
      build: .
      environment:
-       - SELENIUM=http://firefox_2:4444/wd/hub
+       - SELENIUM=http://firefox_994704414286:4444/wd/hub
        - MOBILE_NUMBER=994704414286
      volumes:
        - ".:/app"
@@ -65,7 +65,7 @@ services:
   whatsapp_994704414287:
      build: .
      environment:
-       - SELENIUM=http://firefox_3:4444/wd/hub
+       - SELENIUM=http://firefox_994704414287:4444/wd/hub
        - MOBILE_NUMBER=994704414287
      volumes:
        - ".:/app"
@@ -90,7 +90,7 @@ services:
   whatsapp_994704414288:
      build: .
      environment:
-       - SELENIUM=http://firefox_4:4444/wd/hub
+       - SELENIUM=http://firefox_994704414288:4444/wd/hub
        - MOBILE_NUMBER=994704414288
      volumes:
        - ".:/app"
