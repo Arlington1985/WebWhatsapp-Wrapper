@@ -3,7 +3,7 @@ version: "3"
 services:
 
    # 1st mobile number
-  firefox_1:
+  firefox_994704414285:
     image: selenium/standalone-firefox-debug:3.14.0-dubnium
     ports:
       - "4441:4444"
@@ -13,7 +13,7 @@ services:
     networks:
       - selenium
 
-  whatsapp_1:
+  whatsapp_994704414285:
      build: .
      environment:
        - SELENIUM=http://firefox_1:4444/wd/hub
@@ -28,7 +28,7 @@ services:
 
 
   # 2nd mobile number
-  firefox_2:
+  firefox_994704414286:
     image: selenium/standalone-firefox-debug:3.14.0-dubnium
     ports:
       - "4442:4444"
@@ -38,7 +38,7 @@ services:
     networks:
       - selenium
 
-  whatsapp_2:
+  whatsapp_994704414286:
      build: .
      environment:
        - SELENIUM=http://firefox_2:4444/wd/hub
@@ -52,7 +52,7 @@ services:
        - firefox_2
 
   # 3rd mobile number
-  firefox_3:
+  firefox_994704414287:
     image: selenium/standalone-firefox-debug:3.14.0-dubnium
     ports:
       - "4443:4444"
@@ -62,7 +62,7 @@ services:
     networks:
       - selenium
 
-  whatsapp_3:
+  whatsapp_994704414287:
      build: .
      environment:
        - SELENIUM=http://firefox_3:4444/wd/hub
@@ -77,7 +77,7 @@ services:
 
 
   # 4th mobile number
-  firefox_4:
+  firefox_994704414288:
     image: selenium/standalone-firefox-debug:3.14.0-dubnium
     ports:
       - "4444:4444"
@@ -87,7 +87,7 @@ services:
     networks:
       - selenium
 
-  whatsapp_4:
+  whatsapp_994704414288:
      build: .
      environment:
        - SELENIUM=http://firefox_4:4444/wd/hub
