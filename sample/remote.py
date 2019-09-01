@@ -9,11 +9,17 @@ except KeyError:
    print("Please set the environment variable SELENIUM to Selenium URL")
    sys.exit(1)
 
+try:
+   os.environ["MOBILE_NUMBER"]
+except KeyError:
+   print("Please set the mobile number variable")
+   sys.exit(1)
+
 ##Save session on "/firefox_cache/localStorage.json".
 ##Create the directory "/firefox_cache", it's on .gitignore
 ##The "app" directory is internal to docker, it corresponds to the root of the project.
 ##The profile parameter requires a directory not a file.
-profiledir=os.path.join(".","firefox_cache")
+profiledir=os.path.join(".","firefox_cache",os.environ["MOBILE_NUMBER"])
 if not os.path.exists(profiledir): 
     os.makedirs(profiledir)
 

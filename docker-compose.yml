@@ -1,26 +1,105 @@
 version: "3"
 
 services:
-  firefox:
+
+   # 1st mobile number
+  firefox_1:
     image: selenium/standalone-firefox-debug:3.14.0-dubnium
     ports:
-      - "4444:4444"
-      - "5900:5900"
+      - "4441:4444"
+      - "5901:5900"
     volumes:
       - "/dev/shm:/dev/shm"
     networks:
       - selenium
-  whatsapp:
+
+  whatsapp_1:
      build: .
      environment:
-       - SELENIUM=http://firefox:4444/wd/hub
+       - SELENIUM=http://firefox_1:4444/wd/hub
+       - MOBILE_NUMBER=994704414285
      volumes:
        - ".:/app"
      command: /app/docker-entrypoint.sh
      networks:
        - selenium
      depends_on:
-       - firefox
+       - firefox_1
+
+
+  # 2nd mobile number
+  firefox_2:
+    image: selenium/standalone-firefox-debug:3.14.0-dubnium
+    ports:
+      - "4442:4444"
+      - "5902:5900"
+    volumes:
+      - "/dev/shm:/dev/shm"
+    networks:
+      - selenium
+
+  whatsapp_2:
+     build: .
+     environment:
+       - SELENIUM=http://firefox_2:4444/wd/hub
+       - MOBILE_NUMBER=994704414286
+     volumes:
+       - ".:/app"
+     command: /app/docker-entrypoint.sh
+     networks:
+       - selenium
+     depends_on:
+       - firefox_2
+
+  # 3rd mobile number
+  firefox_3:
+    image: selenium/standalone-firefox-debug:3.14.0-dubnium
+    ports:
+      - "4442:4444"
+      - "5902:5900"
+    volumes:
+      - "/dev/shm:/dev/shm"
+    networks:
+      - selenium
+
+  whatsapp_3:
+     build: .
+     environment:
+       - SELENIUM=http://firefox_3:4444/wd/hub
+       - MOBILE_NUMBER=994704414287
+     volumes:
+       - ".:/app"
+     command: /app/docker-entrypoint.sh
+     networks:
+       - selenium
+     depends_on:
+       - firefox_3
+
+
+  # 4th mobile number
+  firefox_4:
+    image: selenium/standalone-firefox-debug:3.14.0-dubnium
+    ports:
+      - "4442:4444"
+      - "5902:5900"
+    volumes:
+      - "/dev/shm:/dev/shm"
+    networks:
+      - selenium
+
+  whatsapp_4:
+     build: .
+     environment:
+       - SELENIUM=http://firefox_4:4444/wd/hub
+       - MOBILE_NUMBER=994704414288
+     volumes:
+       - ".:/app"
+     command: /app/docker-entrypoint.sh
+     networks:
+       - selenium
+     depends_on:
+       - firefox_4
+
 
 volumes:
   devshm:
