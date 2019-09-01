@@ -55,8 +55,8 @@ services:
   firefox_3:
     image: selenium/standalone-firefox-debug:3.14.0-dubnium
     ports:
-      - "4442:4444"
-      - "5902:5900"
+      - "4443:4444"
+      - "5903:5900"
     volumes:
       - "/dev/shm:/dev/shm"
     networks:
@@ -80,8 +80,8 @@ services:
   firefox_4:
     image: selenium/standalone-firefox-debug:3.14.0-dubnium
     ports:
-      - "4442:4444"
-      - "5902:5900"
+      - "4444:4444"
+      - "5904:5900"
     volumes:
       - "/dev/shm:/dev/shm"
     networks:
