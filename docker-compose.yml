@@ -24,7 +24,7 @@ services:
      networks:
        - selenium
      depends_on:
-       - firefox_1
+       - firefox_994704414285
 
 
   # 2nd mobile number
@@ -49,7 +49,7 @@ services:
      networks:
        - selenium
      depends_on:
-       - firefox_2
+       - firefox_994704414286
 
   # 3rd mobile number
   firefox_994704414287:
@@ -73,7 +73,7 @@ services:
      networks:
        - selenium
      depends_on:
-       - firefox_3
+       - firefox_994704414287
 
 
   # 4th mobile number
@@ -98,7 +98,7 @@ services:
      networks:
        - selenium
      depends_on:
-       - firefox_4
+       - firefox_994704414288
 
 
 volumes:
