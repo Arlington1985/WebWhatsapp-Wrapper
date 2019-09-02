@@ -2,4 +2,4 @@
 
 pip install ./
 pip list
-python sample/remote.py
+python -u sample/remote.py
