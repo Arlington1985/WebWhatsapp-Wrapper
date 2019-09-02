@@ -57,14 +57,22 @@ while True:
                 print ('mime', message.mime)
                 print ('caption', message.caption)
                 print ('client_url', message.client_url)
+
+                # Creating directory tree
                 dirName=os.path.join("/wphotos", message.chat_id['user'])
                 tmp_dir=os.path.join(dirName,"tmp")
                 if not os.path.exists(dirName):
                     os.mkdir(dirName)
-                    os.mkdir(tmp_dir)
                     print("Directory " , dirName ,  " created ")
+                    os.mkdir(tmp_dir)
+                    print("Directory " , tmp_dir ,  " created ")
                 else:
                     print("Directory " , dirName , " already exists")
+                    if not os.path.exists(tmp_dir):
+                        os.mkdir(tmp_dir)
+                        print("Directory " , tmp_dir ,  " created ")
+
+                # Downloading file
                 tmp_file=message.save_media(tmp_dir, force_download = True)
                 print("Photo downloaded to ",tmp_file)
                 files = os.listdir(dirName)
