@@ -63,7 +63,7 @@ while True:
                     print("Directory " , dirName ,  " created ")
                 else:
                     print("Directory " , dirName , " already exists")
-                message.save_media('./'+dirName+'/', force_download = True)
+                message.save_media(dirName, force_download = True)
                 contact.chat.send_seen()
                 #contact.chat.send_message("Photo received")
             else:
