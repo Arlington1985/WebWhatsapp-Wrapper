@@ -66,13 +66,18 @@ while True:
                 else:
                     print("Directory " , dirName , " already exists")
                 tmp_file=message.save_media(tmp_dir, force_download = True)
+                print("Photo downloaded to ",tmp_file)
                 files = os.listdir(dirName)
+                print("Comparing with old photos")
                 for file in files:
                     if filecmp.cmp(file, tmp_file):
                         os.remove(tmp_file)
+                        print("Photo duplicated, removed")
                     else:
                         os.rename(tmp_file, os.path.join(dirName, os.path.basename(tmp_file)))
+                        print("Photo moved to permanent location")
                 contact.chat.send_seen()
+                print("Sent seen request")
                 #contact.chat.send_message("Photo received")
             else:
                 print ('-- Other')
