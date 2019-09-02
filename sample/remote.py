@@ -1,4 +1,4 @@
-import os, sys, time, json
+import os, sys, time, json, filecmp
 from webwhatsapi import WhatsAPIDriver
 from webwhatsapi.objects.message import Message, MediaMessage
 
@@ -58,12 +58,20 @@ while True:
                 print ('caption', message.caption)
                 print ('client_url', message.client_url)
                 dirName=os.path.join("/wphotos", message.chat_id['user'])
+                tmp_dir=os.path.join(dirName,"tmp")
                 if not os.path.exists(dirName):
                     os.mkdir(dirName)
+                    os.mkdir(tmp_dir)
                     print("Directory " , dirName ,  " created ")
                 else:
                     print("Directory " , dirName , " already exists")
-                message.save_media(dirName, force_download = True)
+                tmp_file=message.save_media(tmp_dir, force_download = True)
+                files = os.listdir(dirName)
+                for file in files:
+                    if filecmp.cmp(file, tmp_file):
+                        os.remove(tmp_file)
+                    else:
+                        os.rename(tmp_file, os.path.join(dirName, os.path.basename(tmp_file)))
                 contact.chat.send_seen()
                 #contact.chat.send_message("Photo received")
             else:
