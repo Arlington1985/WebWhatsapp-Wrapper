@@ -4,7 +4,7 @@ services:
 
    # 1st mobile number
   firefox_994704414285:
-    image: selenium/standalone-firefox-debug:3.14.0-dubnium
+    image: selenium/standalone-firefox-debug:3.141.59-dubnium
     ports:
       - "4441:4444"
       - "5901:5900"
@@ -31,7 +31,7 @@ services:
 
   # 2nd mobile number
   firefox_994704414286:
-    image: selenium/standalone-firefox-debug:3.14.0-dubnium
+    image: selenium/standalone-firefox-debug:3.141.59-dubnium
     ports:
       - "4442:4444"
       - "5902:5900"
@@ -57,7 +57,7 @@ services:
 
   # 3rd mobile number
   firefox_994704414287:
-    image: selenium/standalone-firefox-debug:3.14.0-dubnium
+    image: selenium/standalone-firefox-debug:3.141.59-dubnium
     ports:
       - "4443:4444"
       - "5903:5900"
@@ -84,7 +84,7 @@ services:
 
   # 4th mobile number
   firefox_994704414288:
-    image: selenium/standalone-firefox-debug:3.14.0-dubnium
+    image: selenium/standalone-firefox-debug:3.141.59-dubnium
     ports:
       - "4444:4444"
       - "5904:5900"
