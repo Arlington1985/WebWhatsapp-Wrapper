@@ -26,7 +26,7 @@ services:
        - selenium
      depends_on:
        - firefox_994704414285
-     restart: on-failure
+     #restart: on-failure
 
 
   # 2nd mobile number
@@ -53,7 +53,7 @@ services:
        - selenium
      depends_on:
        - firefox_994704414286
-     restart: on-failure
+     #restart: on-failure
 
   # 3rd mobile number
   firefox_994704414287:
@@ -79,7 +79,7 @@ services:
        - selenium
      depends_on:
        - firefox_994704414287
-     restart: on-failure
+     #restart: on-failure
 
 
   # 4th mobile number
@@ -106,7 +106,7 @@ services:
        - selenium
      depends_on:
        - firefox_994704414288
-     restart: on-failure
+     #restart: on-failure
 
 
 volumes:
