@@ -76,13 +76,17 @@ while True:
                 tmp_file=message.save_media(tmp_dir, force_download = True)
                 print("Photo downloaded to ",tmp_file)
                 print("Comparing with old photos")
-                for old_file in filter(os.path.isfile, os.listdir(dirName)):
-                    if filecmp.cmp(os.path.abspath(os.path.join(dirName, old_file)), tmp_file):
-                        os.remove(tmp_file)
-                        print("Photo duplicated, removed")
-                    else:
-                        os.rename(tmp_file, os.path.join(dirName, os.path.basename(tmp_file)))
-                        print("Photo moved to permanent location")
+                old_files=filter(os.path.isfile, os.listdir(dirName))
+                if old_files: 
+                    for old_file in old_files:
+                        if filecmp.cmp(os.path.abspath(os.path.join(dirName, old_file)), tmp_file):
+                            os.remove(tmp_file)
+                            print("Photo duplicated, removed")
+                        else:
+                            os.rename(tmp_file, os.path.join(dirName, os.path.basename(tmp_file)))
+                            print("Photo moved to permanent location")
+                else:
+                    print("First download, photo moved to permanent location")                    
                 contact.chat.send_seen()
                 print("Sent seen request")
                 #contact.chat.send_message("Photo received")
