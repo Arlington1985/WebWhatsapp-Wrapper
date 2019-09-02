@@ -57,7 +57,7 @@ while True:
                 print ('mime', message.mime)
                 print ('caption', message.caption)
                 print ('client_url', message.client_url)
-                dirName=os.path.join("/media/wphotos", message.chat_id['user'])
+                dirName=os.path.join("/wphotos", message.chat_id['user'])
                 if not os.path.exists(dirName):
                     os.mkdir(dirName)
                     print("Directory " , dirName ,  " created ")

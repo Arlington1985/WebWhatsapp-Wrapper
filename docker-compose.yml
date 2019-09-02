@@ -22,6 +22,7 @@ services:
        - MOBILE_NUMBER=994704414285
      volumes:
        - ".:/app"
+       - "/media/wphotos:/wphotos"
      command: /app/docker-entrypoint.sh
      networks:
        - selenium
@@ -49,6 +50,7 @@ services:
        - MOBILE_NUMBER=994704414286
      volumes:
        - ".:/app"
+       - "/media/wphotos:/wphotos"
      command: /app/docker-entrypoint.sh
      networks:
        - selenium
@@ -75,6 +77,7 @@ services:
        - MOBILE_NUMBER=994704414287
      volumes:
        - ".:/app"
+       - "/media/wphotos:/wphotos"
      command: /app/docker-entrypoint.sh
      networks:
        - selenium
@@ -102,6 +105,7 @@ services:
        - MOBILE_NUMBER=994704414288
      volumes:
        - ".:/app"
+       - "/media/wphotos:/wphotos"
      command: /app/docker-entrypoint.sh
      networks:
        - selenium
