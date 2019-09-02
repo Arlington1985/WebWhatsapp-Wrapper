@@ -12,6 +12,7 @@ services:
       - "/dev/shm:/dev/shm"
     networks:
       - selenium
+    restart: on-failure
 
   whatsapp_994704414285:
      build: .
@@ -25,6 +26,7 @@ services:
        - selenium
      depends_on:
        - firefox_994704414285
+     restart: on-failure
 
 
   # 2nd mobile number
@@ -37,6 +39,7 @@ services:
       - "/dev/shm:/dev/shm"
     networks:
       - selenium
+    restart: on-failure
 
   whatsapp_994704414286:
      build: .
@@ -50,6 +53,7 @@ services:
        - selenium
      depends_on:
        - firefox_994704414286
+     restart: on-failure
 
   # 3rd mobile number
   firefox_994704414287:
@@ -61,6 +65,7 @@ services:
       - "/dev/shm:/dev/shm"
     networks:
       - selenium
+    restart: on-failure
 
   whatsapp_994704414287:
      build: .
@@ -74,6 +79,7 @@ services:
        - selenium
      depends_on:
        - firefox_994704414287
+     restart: on-failure
 
 
   # 4th mobile number
@@ -86,6 +92,7 @@ services:
       - "/dev/shm:/dev/shm"
     networks:
       - selenium
+    restart: on-failure
 
   whatsapp_994704414288:
      build: .
@@ -99,6 +106,7 @@ services:
        - selenium
      depends_on:
        - firefox_994704414288
+     restart: on-failure
 
 
 volumes:
