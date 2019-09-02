@@ -27,7 +27,7 @@ driver = WhatsAPIDriver(profile=profiledir, client='remote', command_executor=os
 print("Waiting for QR")
 driver.wait_for_login(timeout=9999999999)
 print("Saving session")
-driver.save_firefox_profile(remove_old=False)
+driver.save_firefox_profile(remove_old=True)
 print("Bot started")
 
 while True:
