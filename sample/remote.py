@@ -78,17 +78,17 @@ while True:
                 print("Photo downloaded to ",tmp_file)
                 print("Comparing with old photos")
                 old_files=filter(os.path.isfile, os.listdir(dirName))
-                print(old_files)
-                #if old_files: 
-                for old_file in old_files:
-                    if filecmp.cmp(os.path.abspath(os.path.join(dirName, old_file)), tmp_file):
-                        os.remove(tmp_file)
-                        print("Photo duplicated, removed")
-                    else:
-                        os.rename(tmp_file, os.path.join(dirName, os.path.basename(tmp_file)))
-                        print("Photo moved to permanent location")
-                #else:
-                #    print("First download, photo moved to permanent location")                    
+                if old_files: 
+                    for old_file in old_files:
+                        if filecmp.cmp(os.path.abspath(os.path.join(dirName, old_file)), tmp_file):
+                            os.remove(tmp_file)
+                            print("Photo duplicated, removed")
+                        else:
+                            os.rename(tmp_file, os.path.join(dirName, os.path.basename(tmp_file)))
+                            print("Photo moved to permanent location")
+                else:
+                    os.rename(tmp_file, os.path.join(dirName, os.path.basename(tmp_file)))
+                    print("First download, photo moved to permanent location")
                 contact.chat.send_seen()
                 print("Sent seen request")
                 #contact.chat.send_message("Photo received")
