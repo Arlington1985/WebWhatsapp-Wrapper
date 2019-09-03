@@ -78,7 +78,7 @@ while True:
                 print("Photo downloaded to ",tmp_file)
                 print("Comparing with old photos")
                 old_files=filter(os.path.isfile, os.listdir(dirName))
-                if old_files: 
+                if len(old_files)==0: 
                     for old_file in old_files:
                         if filecmp.cmp(os.path.abspath(os.path.join(dirName, old_file)), tmp_file):
                             os.remove(tmp_file)
