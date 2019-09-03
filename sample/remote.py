@@ -77,9 +77,7 @@ while True:
                 tmp_file=message.save_media(tmp_dir, force_download = True)
                 print("Photo downloaded to ",tmp_file)
                 print("Comparing with old photos")
-                print(os.listdir(dirName))
-                old_files=list(filter(os.path.isfile, os.listdir(dirName)))
-                print(old_files)
+                old_files=[f for f in os.listdir(dirName) if os.path.isfile(f)]
                 if old_files: 
                     for old_file in old_files:
                         if filecmp.cmp(os.path.abspath(os.path.join(dirName, old_file)), tmp_file):
