@@ -80,13 +80,17 @@ while True:
                 old_files=[f for f in os.listdir(dirName) if os.path.isfile(os.path.join(dirName, f))]
                 if old_files:
                     print(old_files)
+                    dublicated=False
                     for old_file in old_files:
                         if filecmp.cmp(os.path.abspath(os.path.join(dirName, old_file)), tmp_file):
-                            os.remove(tmp_file)
-                            print("Photo duplicated, removed")
-                        else:
-                            os.rename(tmp_file, os.path.join(dirName, os.path.basename(tmp_file)))
-                            print("Photo moved to permanent location")
+                            dublicated=True
+                            
+                    if dublicated:
+                        os.remove(tmp_file)
+                        print("Photo duplicated, removed")
+                    else:
+                        os.rename(tmp_file, os.path.join(dirName, os.path.basename(tmp_file)))
+                        print("Photo moved to permanent location")
                 else:
                     os.rename(tmp_file, os.path.join(dirName, os.path.basename(tmp_file)))
                     print("First download, photo moved to permanent location")
