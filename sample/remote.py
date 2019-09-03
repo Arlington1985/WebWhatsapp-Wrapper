@@ -36,7 +36,7 @@ while True:
     print('Checking for more messages, status, '+ driver.get_status())
     for contact in driver.get_unread(use_unread_count=True):
         for message in contact.messages:
-            print(json.dumps(message.get_js_obj(), indent = 4))
+            #print(json.dumps(message.get_js_obj(), indent = 4))
             print ('class', message.__class__.__name__)
             print ('message', message)
             print ('id', message.id)
