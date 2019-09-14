@@ -22,9 +22,9 @@ except KeyError:
 profiledir=os.path.join(".","firefox_cache",os.environ["MOBILE_NUMBER"])
 if not os.path.exists(profiledir): 
     os.makedirs(profiledir)
-try:
-    driver = WhatsAPIDriver(profile=profiledir, client='remote', command_executor=os.environ["SELENIUM"])
 
+driver = WhatsAPIDriver(profile=profiledir, client='remote', command_executor=os.environ["SELENIUM"])
+try:
     print("Waiting for QR")
     driver.wait_for_login(timeout=9999999999)
     print("Saving session")

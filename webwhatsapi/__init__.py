@@ -255,7 +255,12 @@ class WhatsAPIDriver(object):
         local_storage_file = os.path.join(profilePath, self._LOCAL_STORAGE_FILE)
         if os.path.exists(local_storage_file):
             with open(local_storage_file) as f:
-                self.set_local_storage(loads(f.read()))
+                try:
+                    self.set_local_storage(loads(f.read()))
+                except Exception as e:
+	                print('EXCEPTION:',e)
+	                driver.close()
+	                raise
 
             self.driver.refresh()
 
