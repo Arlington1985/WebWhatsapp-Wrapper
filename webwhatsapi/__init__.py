@@ -259,7 +259,7 @@ class WhatsAPIDriver(object):
                     self.set_local_storage(loads(f.read()))
                 except Exception as e:
 	                print('EXCEPTION:',e)
-	                driver.close()
+	                self.driver.close()
 	                raise
 
             self.driver.refresh()
