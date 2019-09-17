@@ -82,13 +82,16 @@ try:
                     if old_files:
                         print(old_files)
                         dublicated=False
+                        dublicated_with=[]
                         for old_file in old_files:
                             if filecmp.cmp(os.path.abspath(os.path.join(dirName, old_file)), tmp_file):
                                 dublicated=True
+                                dublicated_with.append(old_file)
+
                                 
                         if dublicated:
                             os.remove(tmp_file)
-                            print("Photo duplicated, removed")
+                            print("Photo duplicated with "+dublicated_with+", removed")
                         else:
                             os.rename(tmp_file, os.path.join(dirName, os.path.basename(tmp_file)))
                             print("Photo moved to permanent location")
