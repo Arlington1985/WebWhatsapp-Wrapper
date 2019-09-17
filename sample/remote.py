@@ -91,7 +91,7 @@ try:
                                 
                         if dublicated:
                             os.remove(tmp_file)
-                            print("Photo duplicated with "+dublicated_with+", removed")
+                            print("Photo duplicated with "+','.join(dublicated_with)+", removed")
                         else:
                             os.rename(tmp_file, os.path.join(dirName, os.path.basename(tmp_file)))
                             print("Photo moved to permanent location")
