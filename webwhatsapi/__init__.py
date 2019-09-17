@@ -353,7 +353,7 @@ class WhatsAPIDriver(object):
         """
         return self.wapi_functions.getAllChatIds()
 
-    def get_unread(self, include_me=False, include_notifications=False, use_unread_count=False):
+    def get_unread(self, include_me=False, include_notifications=False, use_unread_count=False, fetch_all_as_unread=False):
         """
         Fetches unread messages
         :param include_me: Include user's messages
@@ -362,10 +362,12 @@ class WhatsAPIDriver(object):
         :type include_notifications: bool or None
         :param use_unread_count: If set uses chat's 'unreadCount' attribute to fetch last n messages from chat
         :type use_unread_count: bool
+        :param fetch_all_as_unread: If set the will fetch all the messages from "marked as unread" chats
+        :type fetch_all_as_unread: bool
         :return: List of unread messages grouped by chats
         :rtype: list[MessageGroup]
         """
-        raw_message_groups = self.wapi_functions.getUnreadMessages(include_me, include_notifications, use_unread_count)
+        raw_message_groups = self.wapi_functions.getUnreadMessages(include_me, include_notifications, use_unread_count, fetch_all_as_unread)
 
         unread_messages = []
         for raw_message_group in raw_message_groups:

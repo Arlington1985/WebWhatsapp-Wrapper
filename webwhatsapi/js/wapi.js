@@ -853,7 +853,7 @@ function isChatMessage(message) {
 }
 
 
-window.WAPI.getUnreadMessages = function (includeMe, includeNotifications, use_unread_count, done) {
+window.WAPI.getUnreadMessages = function (includeMe, includeNotifications, use_unread_count, fetch_all_as_unread, done) {
     const chats  = window.Store.Chat.models;
     let   output = [];
 
@@ -894,10 +894,17 @@ window.WAPI.getUnreadMessages = function (includeMe, includeNotifications, use_u
                             messageGroup.messages.unshift(message);
                             n -= 1;
                         }
-                    } else if (n === -1) { // chat was marked as unread so will fetch last message as unread
+                    } else if (n === -1) { // chat was marked as unread so will fetch all messages or last message as unread
                         if (!messageObj.isSentByMe) {
-                            let message = WAPI.processMessageObj(messageObj, includeMe, includeNotifications);
-                            messageGroup.messages.unshift(message);
+                            if (fetch_all_as_unread) {
+                                // Will fetch all messages from chat
+                                messageGroup.messages = messages.concat(messageGroup.messages)
+                            }
+                            else {
+                                // Will fetch last message from chat
+                                let message = WAPI.processMessageObj(messageObj, includeMe, includeNotifications);
+                                messageGroup.messages.unshift(message);
+                            }
                             break;
                         }
                     } else { // unreadCount = 0
