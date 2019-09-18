@@ -76,6 +76,8 @@ try:
 
                     # Downloading file
                     tmp_file=message.save_media(tmp_dir, force_download = True)
+                    #driver.delete_message(contact.chat.id,message)
+                    
                     print("Photo downloaded to ",tmp_file)
                     print("Comparing with old photos")
                     old_files=[f for f in os.listdir(dirName) if os.path.isfile(os.path.join(dirName, f))]
@@ -104,6 +106,6 @@ try:
                 else:
                     print ('-- Other')
 except Exception as e:
-	print('EXCEPTION:',e)
+	print('EXCEPTION:',e.__class__.__name__,e)
 	driver.close()
 	raise
