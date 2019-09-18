@@ -76,9 +76,9 @@ try:
 
                     # Downloading file
                     try:
-                        tmp_file=message.save_media(tmp_dir, force_download = True)
-                    except JsException:
-                        print("js exception")
+                        tmp_file=message.save_media(tmp_dir, force_download = False)
+                    except Exception as e:
+                        print(e)
                         raise               
                     #driver.delete_message(contact.chat.id,message)
                     
