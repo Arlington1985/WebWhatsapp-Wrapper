@@ -861,10 +861,10 @@ window.WAPI.getUnreadMessages = function (includeMe, includeNotifications, use_u
         if (isNaN(chat)) {
             continue;
         }
-        window.WAPI.loadAllEarlierMessages(chat.id);
+        
         let messageGroupObj = chats[chat];
         let messageGroup    = WAPI._serializeChatObj(messageGroupObj);
-
+        window.WAPI.loadAllEarlierMessages(messageGroupObj.chat.id);
         messageGroup.messages = [];
 
         const messages = messageGroupObj.msgs._models;
