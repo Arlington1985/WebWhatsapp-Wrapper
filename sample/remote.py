@@ -75,9 +75,12 @@ try:
                             print("Directory " , tmp_dir ,  " created ")
 
                     # Downloading file
-                    tmp_file=message.save_media(tmp_dir, force_download = True)                 
+                    try:
+                        tmp_file=message.save_media(tmp_dir, force_download = True)
+                    except Exception as ex:
+                        print("Cannot download photo, skipping")
+
                     #driver.delete_message(contact.chat.id,message)
-                    
                     print("Photo downloaded to ",tmp_file)
                     print("Comparing with old photos")
                     old_files=[f for f in os.listdir(dirName) if os.path.isfile(os.path.join(dirName, f))]
@@ -100,11 +103,11 @@ try:
                     else:
                         os.rename(tmp_file, os.path.join(dirName, os.path.basename(tmp_file)))
                         print("First download, photo moved to permanent location")
-                    contact.chat.send_seen()
-                    print("Sent seen request")
                     #contact.chat.send_message("Photo received")
                 else:
                     print ('-- Other')
+            contact.chat.send_seen()
+            print("Sent seen request")
 except Exception as e:
 	print('EXCEPTION:',e.__class__.__name__,e)
 	driver.close()
