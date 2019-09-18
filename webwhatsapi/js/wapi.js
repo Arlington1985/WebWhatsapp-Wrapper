@@ -899,6 +899,8 @@ window.WAPI.getUnreadMessages = function (includeMe, includeNotifications, use_u
                             if (fetch_all_as_unread) {
                                 // Will fetch all messages from chat
                                 all_messages=WAPI.getChat(messageGroupObj.id).loadEarlierMsgs()
+                                console.log("------")
+                                console.log(all_messages)
                                 //const messages = messageGroupObj.msgs._models;
                                 for (let i = all_messages.length - 1; i >= 0; i--) {
                                     let messageObj = all_messages[i];
