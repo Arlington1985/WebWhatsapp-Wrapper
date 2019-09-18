@@ -75,11 +75,7 @@ try:
                             print("Directory " , tmp_dir ,  " created ")
 
                     # Downloading file
-                    try:
-                        tmp_file=message.save_media(tmp_dir, force_download = False)
-                    except Exception as e:
-                        print(e)
-                        raise               
+                    tmp_file=message.save_media(tmp_dir, force_download = True)                 
                     #driver.delete_message(contact.chat.id,message)
                     
                     print("Photo downloaded to ",tmp_file)
