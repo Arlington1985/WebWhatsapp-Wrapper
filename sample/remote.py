@@ -79,6 +79,7 @@ try:
                         tmp_file=message.save_media(tmp_dir, force_download = True)
                     except Exception as ex:
                         print("Cannot download photo, skipping")
+                        break
 
                     #driver.delete_message(contact.chat.id,message)
                     print("Photo downloaded to ",tmp_file)
