@@ -237,7 +237,7 @@ class WhatsAPIDriver(object):
         self.username = username
         self.wapi_functions = WapiJsWrapper(self.driver, self)
 
-        self.driver.set_script_timeout(500)
+        self.driver.set_script_timeout(5)
         self.driver.implicitly_wait(10)
 
         if autoconnect:
