@@ -863,8 +863,8 @@ window.WAPI.getUnreadMessages = function (includeMe, includeNotifications, use_u
         }
         
         let messageGroupObj = chats[chat];
+        //window.WAPI.loadAllEarlierMessages(messageGroupObj.id);
         let messageGroup    = WAPI._serializeChatObj(messageGroupObj);
-        window.WAPI.loadAllEarlierMessages(messageGroupObj.id);
         messageGroup.messages = [];
 
         const messages = messageGroupObj.msgs._models;
@@ -898,8 +898,10 @@ window.WAPI.getUnreadMessages = function (includeMe, includeNotifications, use_u
                         if (!messageObj.isSentByMe) {
                             if (fetch_all_as_unread) {
                                 // Will fetch all messages from chat
-                                for (let i = messages.length - 1; i >= 0; i--) {
-                                    let messageObj = messages[i];
+                                all_messages=WAPI.getChat(messageGroupObj.id).loadEarlierMsgs()
+                                //const messages = messageGroupObj.msgs._models;
+                                for (let i = all_messages.length - 1; i >= 0; i--) {
+                                    let messageObj = all_messages[i];
                                     let message = WAPI.processMessageObj(messageObj, includeMe, includeNotifications);
                                     if (message) {
                                         messageGroup.messages.push(message);
