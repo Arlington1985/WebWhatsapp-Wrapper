@@ -898,7 +898,7 @@ window.WAPI.getUnreadMessages = function (includeMe, includeNotifications, use_u
                         if (!messageObj.isSentByMe) {
                             if (fetch_all_as_unread) {
                                 // Will fetch all messages from chat
-                                all_messages=WAPI.getChat(messageGroupObj.id).loadEarlierMsgs()._models
+                                all_messages=WAPI.getChat(messageGroupObj.id).loadEarlierMsgs()
                                 console.log("------")
                                 console.log(all_messages)
                                 console.log("---messages---")
