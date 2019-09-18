@@ -36,8 +36,8 @@ try:
         time.sleep(3)
         print('Checking for more messages, status, '+ driver.get_status())
         for contact in driver.get_unread(use_unread_count=True, fetch_all_as_unread=True):
+            print(contact)
             for message in contact.messages:
-                #print(json.dumps(message.get_js_obj(), indent = 4))
                 print ('class', message.__class__.__name__)
                 print ('message', message)
                 print ('id', message.id)
@@ -79,7 +79,7 @@ try:
                         tmp_file=message.save_media(tmp_dir, force_download = True)
                     except Exception as ex:
                         print("Cannot download photo, skipping")
-                        break
+                        continue
 
                     #driver.delete_message(contact.chat.id,message)
                     print("Photo downloaded to ",tmp_file)
