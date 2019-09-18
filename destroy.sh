@@ -1,2 +1,2 @@
 #!/bin/sh
-sudo docker-compose down --log-driver local
+sudo docker-compose down
