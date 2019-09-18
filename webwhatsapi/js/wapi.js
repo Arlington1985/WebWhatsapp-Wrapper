@@ -898,7 +898,13 @@ window.WAPI.getUnreadMessages = function (includeMe, includeNotifications, use_u
                         if (!messageObj.isSentByMe) {
                             if (fetch_all_as_unread) {
                                 // Will fetch all messages from chat
-                                messageGroup.messages = messages.concat(messageGroup.messages)
+                                for (let i = messages.length - 1; i >= 0; i--) {
+                                    let messageObj = messages[i];
+                                    let message = WAPI.processMessageObj(messageObj, includeMe, includeNotifications);
+                                    if (message) {
+                                        messageGroup.messages.push(message);
+                                    }
+                                }
                             }
                             else {
                                 // Will fetch last message from chat
