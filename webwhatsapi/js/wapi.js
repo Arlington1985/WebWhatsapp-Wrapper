@@ -864,7 +864,7 @@ window.WAPI.getUnreadMessages = function (includeMe, includeNotifications, use_u
         
         let messageGroupObj = chats[chat];
         let messageGroup    = WAPI._serializeChatObj(messageGroupObj);
-        window.WAPI.loadAllEarlierMessages(messageGroupObj.chat.id);
+        window.WAPI.loadAllEarlierMessages(messageGroupObj.id);
         messageGroup.messages = [];
 
         const messages = messageGroupObj.msgs._models;
