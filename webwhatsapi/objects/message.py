@@ -1,6 +1,7 @@
 import mimetypes
 from base64 import b64decode
 from datetime import datetime
+import uuid
 
 import os
 from typing import Union
@@ -94,7 +95,7 @@ class MediaMessage(Message):
         self.client_url = self._js_obj.get('clientUrl')
 
         extension = mimetypes.guess_extension(self.mime)
-        self.filename = ''.join([str(id(self)), extension or ''])
+        self.filename = ''.join([str(uuid.uuid4().hex), extension or ''])
 
     def save_media(self, path, force_download=False):
         # gets full media
