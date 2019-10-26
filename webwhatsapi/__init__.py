@@ -269,7 +269,7 @@ class WhatsAPIDriver(object):
 
         # instead we use this (temporary) solution:
         # return 'class="app _3dqpi two"' in self.driver.page_source
-        return self.wapi_functions.isLoggedIn()
+        return self.driver.execute_script("if (document.querySelector('*[data-icon=chat]') !== null) { return true } else { return false }")
 
     def is_connected(self):
         """Returns if user's phone is connected to the internet."""
@@ -667,7 +667,7 @@ class WhatsAPIDriver(object):
         :type id: str
         """
         profile_pic_small = self.wapi_functions.getProfilePicSmallFromId(id)
-        if profile_pic:
+        if profile_pic_small:
             return b64decode(profile_pic_small)
         else:
             return False
