@@ -31,6 +31,9 @@ services:
      restart: on-failure
      logging:
        driver: syslog
+       options: 
+         tag="{{.ImageName}}\{{.Name}}\{{.ID}}"
+       
 
 
   # 2nd mobile number
@@ -61,6 +64,9 @@ services:
      restart: on-failure
      logging:
        driver: syslog
+       options: 
+         tag="{{.ImageName}}\{{.Name}}\{{.ID}}"
+       
 
   # 3rd mobile number
   firefox_994704414287:
@@ -90,6 +96,8 @@ services:
      restart: on-failure
      logging:
        driver: syslog
+       options: 
+         tag="{{.ImageName}}\{{.Name}}\{{.ID}}"
 
 
   # 4th mobile number
@@ -120,6 +128,9 @@ services:
      restart: on-failure
      logging:
        driver: syslog
+       options: 
+         tag="{{.ImageName}}\{{.Name}}\{{.ID}}"
+       
 
 
 volumes:
