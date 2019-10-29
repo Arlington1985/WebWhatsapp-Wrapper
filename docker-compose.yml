@@ -32,7 +32,7 @@ services:
      logging:
        driver: syslog
        options: 
-         tag="{{.ImageName}}\{{.Name}}\{{.ID}}"
+         tag: "{{.ImageName}}\{{.Name}}\{{.ID}}"
        
 
 
@@ -65,7 +65,7 @@ services:
      logging:
        driver: syslog
        options: 
-         tag="{{.ImageName}}\{{.Name}}\{{.ID}}"
+         tag: "{{.ImageName}}\{{.Name}}\{{.ID}}"
        
 
   # 3rd mobile number
@@ -97,7 +97,7 @@ services:
      logging:
        driver: syslog
        options: 
-         tag="{{.ImageName}}\{{.Name}}\{{.ID}}"
+         tag: "{{.ImageName}}\{{.Name}}\{{.ID}}"
 
 
   # 4th mobile number
@@ -129,7 +129,7 @@ services:
      logging:
        driver: syslog
        options: 
-         tag="{{.ImageName}}\{{.Name}}\{{.ID}}"
+         tag: "{{.ImageName}}\{{.Name}}\{{.ID}}"
        
 
 
