@@ -29,6 +29,8 @@ services:
      depends_on:
        - firefox_994704414285
      restart: on-failure
+     logging:
+       driver: syslog
 
 
   # 2nd mobile number
@@ -57,6 +59,8 @@ services:
      depends_on:
        - firefox_994704414286
      restart: on-failure
+     logging:
+       driver: syslog
 
   # 3rd mobile number
   firefox_994704414287:
@@ -84,6 +88,8 @@ services:
      depends_on:
        - firefox_994704414287
      restart: on-failure
+     logging:
+       driver: syslog
 
 
   # 4th mobile number
@@ -112,6 +118,8 @@ services:
      depends_on:
        - firefox_994704414288
      restart: on-failure
+     logging:
+       driver: syslog
 
 
 volumes:
