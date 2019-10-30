@@ -18,6 +18,7 @@ services:
 
   whatsapp_994704414285:
      container_name: whatsapp_994704414285
+     image: whatsapp_994704414285
      build: .
      environment:
        - SELENIUM=http://firefox_994704414285:4444/wd/hub
@@ -34,7 +35,7 @@ services:
      logging:
        driver: syslog
        options: 
-         tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
+         tag: "{{.Name}}/{{.ID}}"
        
 
 
@@ -53,6 +54,7 @@ services:
 
   whatsapp_994704414286:
      container_name: whatsapp_994704414286
+     image: whatsapp_994704414286
      build: .
      environment:
        - SELENIUM=http://firefox_994704414286:4444/wd/hub
@@ -69,7 +71,7 @@ services:
      logging:
        driver: syslog
        options: 
-         tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
+         tag: "{{.Name}}/{{.ID}}"
        
 
   # 3rd mobile number
@@ -87,6 +89,7 @@ services:
 
   whatsapp_994704414287:
      container_name: whatsapp_994704414287
+     image: whatsapp_994704414287
      build: .
      environment:
        - SELENIUM=http://firefox_994704414287:4444/wd/hub
@@ -103,7 +106,7 @@ services:
      logging:
        driver: syslog
        options: 
-         tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
+         tag: "{{.Name}}/{{.ID}}"
 
 
   # 4th mobile number
@@ -121,6 +124,7 @@ services:
 
   whatsapp_994704414288:
      container_name: whatsapp_994704414288
+     image: whatsapp_994704414288
      build: .
      environment:
        - SELENIUM=http://firefox_994704414288:4444/wd/hub
@@ -137,7 +141,7 @@ services:
      logging:
        driver: syslog
        options: 
-         tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
+         tag: "{{.Name}}/{{.ID}}"
        
 
 
