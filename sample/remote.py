@@ -61,7 +61,7 @@ try:
                     print ('client_url', message.client_url)
 
                     # Creating directory tree
-                    dirName=os.path.join("/wphotos", message.chat_id['user'])
+                    dirName=os.path.join("/wphotos", message.chat_id['user'][:12])
                     tmp_dir=os.path.join(dirName,"tmp")
                     if not os.path.exists(dirName):
                         os.mkdir(dirName)
