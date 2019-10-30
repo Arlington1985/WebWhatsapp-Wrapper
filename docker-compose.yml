@@ -18,7 +18,7 @@ services:
 
   whatsapp_994704414285:
      container_name: whatsapp_994704414285
-     image: WebWhatsapp-Wrapper
+     image: webwhatsapp-wrapper
      build: .
      environment:
        - SELENIUM=http://firefox_994704414285:4444/wd/hub
@@ -54,7 +54,7 @@ services:
 
   whatsapp_994704414286:
      container_name: whatsapp_994704414286
-     image: WebWhatsapp-Wrapper
+     image: webwhatsapp-wrapper
      build: .
      environment:
        - SELENIUM=http://firefox_994704414286:4444/wd/hub
@@ -89,7 +89,7 @@ services:
 
   whatsapp_994704414287:
      container_name: whatsapp_994704414287
-     image: WebWhatsapp-Wrapper
+     image: webwhatsapp-wrapper
      build: .
      environment:
        - SELENIUM=http://firefox_994704414287:4444/wd/hub
@@ -124,7 +124,7 @@ services:
 
   whatsapp_994704414288:
      container_name: whatsapp_994704414288
-     image: WebWhatsapp-Wrapper
+     image: webwhatsapp-wrapper
      build: .
      environment:
        - SELENIUM=http://firefox_994704414288:4444/wd/hub
