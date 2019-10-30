@@ -5,6 +5,7 @@ services:
 
    # 1st mobile number
   firefox_994704414285:
+    container_name: firefox_994704414285
     image: selenium/standalone-firefox-debug:3.14.0-curium
     ports:
       - "4441:4444"
@@ -16,6 +17,7 @@ services:
     restart: on-failure
 
   whatsapp_994704414285:
+     container_name: whatsapp_994704414285
      build: .
      environment:
        - SELENIUM=http://firefox_994704414285:4444/wd/hub
@@ -38,6 +40,7 @@ services:
 
   # 2nd mobile number
   firefox_994704414286:
+    container_name: firefox_994704414286
     image: selenium/standalone-firefox-debug:3.14.0-curium
     ports:
       - "4442:4444"
@@ -49,6 +52,7 @@ services:
     restart: on-failure
 
   whatsapp_994704414286:
+     container_name: whatsapp_994704414286
      build: .
      environment:
        - SELENIUM=http://firefox_994704414286:4444/wd/hub
@@ -70,6 +74,7 @@ services:
 
   # 3rd mobile number
   firefox_994704414287:
+    container_name: firefox_994704414287
     image: selenium/standalone-firefox-debug:3.14.0-curium
     ports:
       - "4443:4444"
@@ -81,6 +86,7 @@ services:
     restart: on-failure
 
   whatsapp_994704414287:
+     container_name: whatsapp_994704414287
      build: .
      environment:
        - SELENIUM=http://firefox_994704414287:4444/wd/hub
@@ -102,6 +108,7 @@ services:
 
   # 4th mobile number
   firefox_994704414288:
+    container_name: firefox_994704414288
     image: selenium/standalone-firefox-debug:3.14.0-curium
     ports:
       - "4444:4444"
@@ -113,6 +120,7 @@ services:
     restart: on-failure
 
   whatsapp_994704414288:
+     container_name: whatsapp_994704414288
      build: .
      environment:
        - SELENIUM=http://firefox_994704414288:4444/wd/hub
