@@ -8,13 +8,13 @@ logging.info ("Environment", os.environ)
 try:
    os.environ["SELENIUM"]
 except KeyError:
-   logging.info("Please set the environment variable SELENIUM to Selenium URL")
+   logging.error("Please set the environment variable SELENIUM to Selenium URL")
    sys.exit(1)
 
 try:
    os.environ["MOBILE_NUMBER"]
 except KeyError:
-   logging.info("Please set the mobile number variable")
+   logging.error("Please set the mobile number variable")
    sys.exit(1)
 
 ##Save session on "/firefox_cache/localStorage.json".
