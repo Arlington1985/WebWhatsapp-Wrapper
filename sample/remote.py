@@ -2,7 +2,7 @@ import os, sys, time, json, filecmp, logging
 from webwhatsapi import WhatsAPIDriver
 from webwhatsapi.objects.message import Message, MediaMessage
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 logging.info ("Environment", os.environ)
 try:
@@ -65,7 +65,7 @@ try:
                     # Creating directory tree
                     dirName=os.path.join("/wphotos", message.chat_id['user'][:12])
                     tmp_dir=os.path.join(dirName,"tmp")
-                    
+
                     if not os.path.exists(tmp_dir):
                         # Will create dirName and tmp_dir in one shoot
                         # exist_ok=True, because of paralel execution in another container, to avoid race condition 
