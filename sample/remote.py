@@ -40,7 +40,7 @@ try:
         for contact in driver.get_unread(use_unread_count=True, fetch_all_as_unread=True):
             logging.info(contact)
             for message in contact.messages:
-                logging.info ('class: '+ message.__class__.__name__)
+                logging.info ('class: '+ str(message.__class__.__name__))
                 logging.info ('message: '+ str(message))
                 logging.info ('id: '+ str(message.id))
                 logging.info ('type: '+ str(message.type))
@@ -51,16 +51,16 @@ try:
                 logging.info ('sender.safe_name: '+ str(message.sender.get_safe_name()))
                 if message.type == 'chat':
                     logging.info ('-- Chat')
-                    logging.info ('safe_content: '+ message.safe_content)
-                    logging.info ('content: '+ message.content)
+                    logging.info ('safe_content: '+ str(message.safe_content))
+                    logging.info ('content: '+ str(message.content))
                     # contact.chat.send_message(message.safe_content)
                 elif message.type == 'image' or message.type == 'video' :
                     logging.info ('-- Image or Video')
-                    logging.info ('filename: '+ message.filename)
-                    logging.info ('size: '+ message.size)
-                    logging.info ('mime: '+ message.mime)
-                    logging.info ('caption: '+ message.caption)
-                    logging.info ('client_url: '+ message.client_url)
+                    logging.info ('filename: '+ str(message.filename))
+                    logging.info ('size: '+ str(message.size))
+                    logging.info ('mime: '+ str(message.mime))
+                    logging.info ('caption: '+ str(message.caption))
+                    logging.info ('client_url: '+ str(message.client_url))
 
                     # Creating directory tree
                     dirName=os.path.join("/wphotos", message.chat_id['user'][:12])
