@@ -40,27 +40,27 @@ try:
         for contact in driver.get_unread(use_unread_count=True, fetch_all_as_unread=True):
             logging.info(contact)
             for message in contact.messages:
-                logging.info ('class', message.__class__.__name__)
-                logging.info ('message', message)
-                logging.info ('id', message.id)
-                logging.info ('type', message.type)
-                logging.info ('timestamp', message.timestamp)
-                logging.info ('chat_id', message.chat_id)
-                logging.info ('sender', message.sender)
-                logging.info ('sender.id', message.sender.id)
-                logging.info ('sender.safe_name', message.sender.get_safe_name())
+                logging.info ('class'+ message.__class__.__name__)
+                logging.info ('message'+ message)
+                logging.info ('id'+ message.id)
+                logging.info ('type'+ message.type)
+                logging.info ('timestamp'+ message.timestamp)
+                logging.info ('chat_id'+ message.chat_id)
+                logging.info ('sender'+ message.sender)
+                logging.info ('sender.id'+ message.sender.id)
+                logging.info ('sender.safe_name'+ message.sender.get_safe_name())
                 if message.type == 'chat':
                     logging.info ('-- Chat')
-                    logging.info ('safe_content', message.safe_content)
-                    logging.info ('content', message.content)
+                    logging.info ('safe_content'+ message.safe_content)
+                    logging.info ('content'+ message.content)
                     # contact.chat.send_message(message.safe_content)
                 elif message.type == 'image' or message.type == 'video' :
                     logging.info ('-- Image or Video')
-                    logging.info ('filename', message.filename)
-                    logging.info ('size', message.size)
-                    logging.info ('mime', message.mime)
-                    logging.info ('caption', message.caption)
-                    logging.info ('client_url', message.client_url)
+                    logging.info ('filename'+ message.filename)
+                    logging.info ('size'+ message.size)
+                    logging.info ('mime'+ message.mime)
+                    logging.info ('caption'+ message.caption)
+                    logging.info ('client_url'+ message.client_url)
 
                     # Creating directory tree
                     dirName=os.path.join("/wphotos", message.chat_id['user'][:12])
@@ -70,9 +70,9 @@ try:
                         # Will create dirName and tmp_dir in one shoot
                         # exist_ok=True, because of paralel execution in another container, to avoid race condition 
                         os.makedirs(tmp_dir, exist_ok=True)
-                        logging.info("Directory set " , tmp_dir ,  " was created ")
+                        logging.info("Directory set " + tmp_dir +  " was created ")
                     else:
-                        logging.info("Directory set " , tmp_dir , " already exists")
+                        logging.info("Directory set " + tmp_dir + " already exists")
 
                     # Downloading file
                     try:
@@ -82,7 +82,7 @@ try:
                         continue
 
                     #driver.delete_message(contact.chat.id,message)
-                    logging.info("Photo downloaded to ",tmp_file)
+                    logging.info("Photo downloaded to "+tmp_file)
                     logging.info("Comparing with old photos")
                     old_files=[f for f in os.listdir(dirName) if os.path.isfile(os.path.join(dirName, f))]
                     if old_files:
@@ -110,6 +110,6 @@ try:
             contact.chat.send_seen()
             logging.info("Sent seen request")
 except Exception as e:
-	logging.exception(e.__class__.__name__,e)
+	logging.exception(e)
 	driver.close()
 	raise
