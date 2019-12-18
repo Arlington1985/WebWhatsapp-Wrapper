@@ -78,7 +78,7 @@ try:
                     # Downloading file
                     try:
                         tmp_file=message.save_media(tmp_dir, force_download = True)
-			file_split=os.path.splitext(os.path.basename(tmp_file))
+                        file_split=os.path.splitext(os.path.basename(tmp_file))
                     except Exception as ex:
                         logging.error("Cannot download photo, skipping")
                         continue
