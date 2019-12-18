@@ -101,7 +101,7 @@ try:
                             os.remove(tmp_file)
                             logging.info("Photo duplicated with "+','.join(dublicated_with)+", removed")
                         else:
-                            os.rename(tmp_file, os.path.join(dirName, file_split[0], f"_{last_mnumber}", file_split[1]))
+                            os.rename(tmp_file, os.path.join(dirName, file_split[0]+f"_{last_mnumber}"+file_split[1]))
                             logging.info("Photo moved to permanent location")
                     else:
                         os.rename(tmp_file, os.path.join(dirName, file_split[0]+f"_{last_mnumber}"+file_split[1]))
