@@ -104,7 +104,7 @@ try:
                             os.rename(tmp_file, os.path.join(dirName, file_split[0], f"_{last_mnumber}", file_split[1]))
                             logging.info("Photo moved to permanent location")
                     else:
-                        os.rename(tmp_file, os.path.join(dirName, file_split[0], f"_{last_mnumber}", file_split[1]))
+                        os.rename(tmp_file, os.path.join(dirName, file_split[0]+f"_{last_mnumber}"+file_split[1]))
                         logging.info("First download, photo moved to permanent location")
                     #contact.chat.send_message("Photo received")
                 else:
