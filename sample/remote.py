@@ -12,7 +12,8 @@ except KeyError:
    sys.exit(1)
 
 try:
-   os.environ["MOBILE_NUMBER"]
+   mobile_number = os.environ["MOBILE_NUMBER"]
+   last_mnumber = mobile_number[-1:]
 except KeyError:
    logging.error("Please set the mobile number variable")
    sys.exit(1)
@@ -21,7 +22,7 @@ except KeyError:
 ##Create the directory "/firefox_cache", it's on .gitignore
 ##The "app" directory is internal to docker, it corresponds to the root of the project.
 ##The profile parameter requires a directory not a file.
-profiledir=os.path.join(".","firefox_cache",os.environ["MOBILE_NUMBER"])
+profiledir=os.path.join(".","firefox_cache", mobile_number)
 if not os.path.exists(profiledir): 
     os.makedirs(profiledir)
 
@@ -77,6 +78,7 @@ try:
                     # Downloading file
                     try:
                         tmp_file=message.save_media(tmp_dir, force_download = True)
+		        file_split=os.path.splitext(os.path.basename(tmp_file))
                     except Exception as ex:
                         logging.error("Cannot download photo, skipping")
                         continue
@@ -99,10 +101,10 @@ try:
                             os.remove(tmp_file)
                             logging.info("Photo duplicated with "+','.join(dublicated_with)+", removed")
                         else:
-                            os.rename(tmp_file, os.path.join(dirName, os.path.basename(tmp_file)))
+                            os.rename(tmp_file, os.path.join(dirName, file_split[0], f"_{last_mnumber}", file_split[1]))
                             logging.info("Photo moved to permanent location")
                     else:
-                        os.rename(tmp_file, os.path.join(dirName, os.path.basename(tmp_file)))
+                        os.rename(tmp_file, os.path.join(dirName, file_split[0], f"_{last_mnumber}", file_split[1]))
                         logging.info("First download, photo moved to permanent location")
                     #contact.chat.send_message("Photo received")
                 else:
