@@ -4,6 +4,7 @@ from webwhatsapi.objects.message import Message, MediaMessage
 import psycopg2
 
 
+
 logging.basicConfig(level=logging.INFO)
 
 logging.info ("Environment", os.environ)
@@ -47,6 +48,7 @@ try:
         password = password,
         host = hostname
     )
+    print('Connected to database')
     # create a cursor
     cur = db_conn.cursor()
         
