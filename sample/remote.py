@@ -47,7 +47,12 @@ try:
         password = password,
         host = hostname
     )
-
+    # create a cursor
+    cur = db_conn.cursor()
+        
+    # execute a statement
+    print('PostgreSQL database version:')
+    cur.execute('SELECT version()')
 
     while True:
         time.sleep(3)
