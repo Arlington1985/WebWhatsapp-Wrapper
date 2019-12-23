@@ -7,4 +7,3 @@ typing
 numpy
 python-magic
 psycopg2
-urllib

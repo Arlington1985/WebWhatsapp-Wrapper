@@ -37,7 +37,7 @@ try:
     driver.save_firefox_profile(remove_old=True)
     logging.info("Bot started")
     from urllib.parse import urlparse
-    database_url = urlparse.urlparse(os.environ["DATABASE_URL"])
+    database_url = urlparse(os.environ["DATABASE_URL"])
     username = database_url.username
     password = database_url.password
     database = database_url.path[1:]
