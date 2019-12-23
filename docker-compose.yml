@@ -23,7 +23,7 @@ services:
      environment:
        - SELENIUM=http://firefox_994704414285:4444/wd/hub
        - MOBILE_NUMBER=994704414285
-       - DATABASE_URL='postgresql://postgres:${database_pass}@192.168.0.100:5432/postgres'
+       - DATABASE_URL
      volumes:
        - ".:/app"
        - "/media/wphotos:/wphotos"
@@ -60,6 +60,7 @@ services:
      environment:
        - SELENIUM=http://firefox_994704414286:4444/wd/hub
        - MOBILE_NUMBER=994704414286
+       - DATABASE_URL       
      volumes:
        - ".:/app"
        - "/media/wphotos:/wphotos"
@@ -95,6 +96,7 @@ services:
      environment:
        - SELENIUM=http://firefox_994704414287:4444/wd/hub
        - MOBILE_NUMBER=994704414287
+       - DATABASE_URL
      volumes:
        - ".:/app"
        - "/media/wphotos:/wphotos"
@@ -130,6 +132,7 @@ services:
      environment:
        - SELENIUM=http://firefox_994704414288:4444/wd/hub
        - MOBILE_NUMBER=994704414288
+       - DATABASE_URL
      volumes:
        - ".:/app"
        - "/media/wphotos:/wphotos"

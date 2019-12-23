@@ -1,6 +1,7 @@
-import os, sys, time, json, filecmp, logging
+import os, sys, time, json, filecmp, logging, datetime
 from webwhatsapi import WhatsAPIDriver
 from webwhatsapi.objects.message import Message, MediaMessage
+from urllib.parse import urlparse
 import psycopg2
 
 
@@ -36,7 +37,6 @@ try:
     logging.info("Saving session")
     driver.save_firefox_profile(remove_old=True)
     logging.info("Bot started")
-    from urllib.parse import urlparse
     database_url = urlparse(os.environ["DATABASE_URL"])
     username = database_url.username
     password = database_url.password
@@ -49,12 +49,8 @@ try:
         host = hostname
     )
     print('Connected to database')
-    # create a cursor
-    cur = db_conn.cursor()
-        
-    # execute a statement
-    print('PostgreSQL database version:')
-    cur.execute('SELECT version()')
+    insert_to_downloads = """INSERT INTO vendors(filename, from_number, to_number, date, status)
+             VALUES(%s) RETURNING id;"""
 
     while True:
         time.sleep(3)
@@ -102,6 +98,11 @@ try:
                         file_split=os.path.splitext(os.path.basename(tmp_file))
                     except Exception as ex:
                         logging.error("Cannot download photo, skipping")
+                        cur = db_conn.cursor()
+                        cur.execute(insert_to_downloads, (message.filename, message.chat_id['user'][:12], mobile_number, datetime.now(), "skipped"))
+                        photo_id = cur.fetchone()[0]
+                        db_conn.commit()
+                        cur.close()
                         continue
 
                     #driver.delete_message(contact.chat.id,message)
@@ -121,12 +122,27 @@ try:
                         if dublicated:
                             os.remove(tmp_file)
                             logging.info("Photo duplicated with "+','.join(dublicated_with)+", removed")
+                            cur = db_conn.cursor()
+                            cur.execute(insert_to_downloads, (message.filename, message.chat_id['user'][:12], mobile_number, datetime.now(), "duplicated"))
+                            photo_id = cur.fetchone()[0]
+                            db_conn.commit()
+                            cur.close()
                         else:
                             os.rename(tmp_file, os.path.join(dirName, file_split[0]+f"_{last_mnumber}"+file_split[1]))
                             logging.info("Photo moved to permanent location")
+                            cur = db_conn.cursor()
+                            cur.execute(insert_to_downloads, (message.filename, message.chat_id['user'][:12], mobile_number, datetime.now(), "downloaded"))
+                            photo_id = cur.fetchone()[0]
+                            db_conn.commit()
+                            cur.close()
                     else:
                         os.rename(tmp_file, os.path.join(dirName, file_split[0]+f"_{last_mnumber}"+file_split[1]))
                         logging.info("First download, photo moved to permanent location")
+                        cur = db_conn.cursor()
+                        cur.execute(insert_to_downloads, (message.filename, message.chat_id['user'][:12], mobile_number, datetime.now(), "downloaded"))
+                        photo_id = cur.fetchone()[0]
+                        db_conn.commit()
+                        cur.close()
                     #contact.chat.send_message("Photo received")
                 else:
                     logging.info ('-- Other')
@@ -134,6 +150,17 @@ try:
             logging.info("Sent seen request")
 except Exception as e:
     logging.exception(e)
-    driver.close()
-    db_conn.close()
+    if driver is not None:
+        driver.close()
+        print('Selenium driver connection closed')        
+    if db_conn is not None:
+        db_conn.close()
+        print('Database connection closed')
     raise
+finally:
+    if driver is not None:
+        driver.close()
+        print('Selenium driver connection closed')        
+    if db_conn is not None:
+        db_conn.close()
+        print('Database connection closed')
