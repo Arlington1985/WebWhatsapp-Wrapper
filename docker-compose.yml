@@ -23,6 +23,7 @@ services:
      environment:
        - SELENIUM=http://firefox_994704414285:4444/wd/hub
        - MOBILE_NUMBER=994704414285
+       - DATABASE_URL='postgresql://postgres:${database_pass}@192.168.0.100:5432/postgres'
      volumes:
        - ".:/app"
        - "/media/wphotos:/wphotos"

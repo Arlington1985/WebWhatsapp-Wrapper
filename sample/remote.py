@@ -1,6 +1,8 @@
 import os, sys, time, json, filecmp, logging
 from webwhatsapi import WhatsAPIDriver
 from webwhatsapi.objects.message import Message, MediaMessage
+import psycopg2
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -33,6 +35,18 @@ try:
     logging.info("Saving session")
     driver.save_firefox_profile(remove_old=True)
     logging.info("Bot started")
+    from urllib.parse import urlparse
+    database_url = urlparse.urlparse(os.environ["DATABASE_URL"])
+    username = database_url.username
+    password = database_url.password
+    database = database_url.path[1:]
+    hostname = database_url.hostname
+    db_conn = psycopg2.connect(
+        database = database,
+        user = username,
+        password = password,
+        host = hostname
+    )
 
 
     while True:
@@ -112,6 +126,7 @@ try:
             contact.chat.send_seen()
             logging.info("Sent seen request")
 except Exception as e:
-	logging.exception(e)
-	driver.close()
-	raise
+    logging.exception(e)
+    driver.close()
+    db_conn.close()
+    raise

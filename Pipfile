@@ -16,6 +16,7 @@ six = "*"
 typing = "*"
 numpy = "*"
 python-magic = "*"
+psycopg2 = "*"
 
 
 [dev-packages]
