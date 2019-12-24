@@ -3,7 +3,6 @@ from webwhatsapi import WhatsAPIDriver
 from webwhatsapi.objects.message import Message, MediaMessage
 from urllib.parse import urlparse
 import psycopg2
-from datetime import datetime
 
 
 logging.basicConfig(level=logging.INFO)
@@ -49,8 +48,8 @@ try:
         host = hostname
     )
     print('Connected to database')
-    insert_to_downloads = """INSERT INTO vendors(filename, from_number, to_number, date, status)
-             VALUES(%s) RETURNING id;"""
+    insert_to_downloads = """INSERT INTO whatsapp.photo_downloads(filename, from_number, to_number, datetime, status)
+             VALUES(%s, %s, %s, LOCALTIMESTAMP, %s ) RETURNING id;"""
 
     while True:
         time.sleep(3)
@@ -99,7 +98,7 @@ try:
                     except Exception as ex:
                         logging.error("Cannot download photo, skipping")
                         cur = db_conn.cursor()
-                        cur.execute(insert_to_downloads, (str(message.filename), str(message.chat_id['user'][:12]), str(mobile_number), datetime.now(tz=None), "skipped"))
+                        cur.execute(insert_to_downloads, (str(message.filename), str(message.chat_id['user'][:12]), str(mobile_number), "skipped"))
                         photo_id = cur.fetchone()[0]
                         db_conn.commit()
                         cur.close()
@@ -123,7 +122,7 @@ try:
                             os.remove(tmp_file)
                             logging.info("Photo duplicated with "+','.join(dublicated_with)+", removed")
                             cur = db_conn.cursor()
-                            cur.execute(insert_to_downloads, (str(message.filename), str(message.chat_id['user'][:12]), str(mobile_number), datetime.now(tz=None), "duplicated"))
+                            cur.execute(insert_to_downloads, (str(message.filename), str(message.chat_id['user'][:12]), str(mobile_number), "duplicated"))
                             photo_id = cur.fetchone()[0]
                             db_conn.commit()
                             cur.close()
@@ -131,7 +130,7 @@ try:
                             os.rename(tmp_file, os.path.join(dirName, file_split[0]+f"_{last_mnumber}"+file_split[1]))
                             logging.info("Photo moved to permanent location")
                             cur = db_conn.cursor()
-                            cur.execute(insert_to_downloads, (str(message.filename), str(message.chat_id['user'][:12]), str(mobile_number), datetime.now(tz=None), "downloaded"))
+                            cur.execute(insert_to_downloads, (str(message.filename), str(message.chat_id['user'][:12]), str(mobile_number), "downloaded"))
                             photo_id = cur.fetchone()[0]
                             db_conn.commit()
                             cur.close()
@@ -139,7 +138,7 @@ try:
                         os.rename(tmp_file, os.path.join(dirName, file_split[0]+f"_{last_mnumber}"+file_split[1]))
                         logging.info("First download, photo moved to permanent location")
                         cur = db_conn.cursor()
-                        cur.execute(insert_to_downloads, (str(message.filename), str(message.chat_id['user'][:12]), str(mobile_number), datetime.now(tz=None), "downloaded"))
+                        cur.execute(insert_to_downloads, (str(message.filename), str(message.chat_id['user'][:12]), str(mobile_number), "downloaded"))
                         photo_id = cur.fetchone()[0]
                         db_conn.commit()
                         cur.close()
