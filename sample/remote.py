@@ -99,7 +99,7 @@ try:
                     except Exception as ex:
                         logging.error("Cannot download photo, skipping")
                         cur = db_conn.cursor()
-                        cur.execute(insert_to_downloads, (message.filename, message.chat_id['user'][:12], mobile_number, datetime.now(tz=None), "skipped"))
+                        cur.execute(insert_to_downloads, (str(message.filename), str(message.chat_id['user'][:12]), str(mobile_number), datetime.now(tz=None), "skipped"))
                         photo_id = cur.fetchone()[0]
                         db_conn.commit()
                         cur.close()
@@ -123,7 +123,7 @@ try:
                             os.remove(tmp_file)
                             logging.info("Photo duplicated with "+','.join(dublicated_with)+", removed")
                             cur = db_conn.cursor()
-                            cur.execute(insert_to_downloads, (message.filename, message.chat_id['user'][:12], mobile_number, datetime.now(tz=None), "duplicated"))
+                            cur.execute(insert_to_downloads, (str(message.filename), str(message.chat_id['user'][:12]), str(mobile_number), datetime.now(tz=None), "duplicated"))
                             photo_id = cur.fetchone()[0]
                             db_conn.commit()
                             cur.close()
@@ -131,7 +131,7 @@ try:
                             os.rename(tmp_file, os.path.join(dirName, file_split[0]+f"_{last_mnumber}"+file_split[1]))
                             logging.info("Photo moved to permanent location")
                             cur = db_conn.cursor()
-                            cur.execute(insert_to_downloads, (message.filename, message.chat_id['user'][:12], mobile_number, datetime.now(tz=None), "downloaded"))
+                            cur.execute(insert_to_downloads, (str(message.filename), str(message.chat_id['user'][:12]), str(mobile_number), datetime.now(tz=None), "downloaded"))
                             photo_id = cur.fetchone()[0]
                             db_conn.commit()
                             cur.close()
@@ -139,7 +139,7 @@ try:
                         os.rename(tmp_file, os.path.join(dirName, file_split[0]+f"_{last_mnumber}"+file_split[1]))
                         logging.info("First download, photo moved to permanent location")
                         cur = db_conn.cursor()
-                        cur.execute(insert_to_downloads, (message.filename, message.chat_id['user'][:12], mobile_number, datetime.now(tz=None), "downloaded"))
+                        cur.execute(insert_to_downloads, (str(message.filename), str(message.chat_id['user'][:12]), str(mobile_number), datetime.now(tz=None), "downloaded"))
                         photo_id = cur.fetchone()[0]
                         db_conn.commit()
                         cur.close()
