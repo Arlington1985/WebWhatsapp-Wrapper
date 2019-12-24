@@ -41,11 +41,14 @@ try:
     password = database_url.password
     database = database_url.path[1:]
     hostname = database_url.hostname
+    port = database_url.port
+    
     db_conn = psycopg2.connect(
         database = database,
         user = username,
         password = password,
-        host = hostname
+        host = hostname,
+        port = port
     )
     print('Connected to database')
     insert_to_downloads = """INSERT INTO whatsapp.photo_downloads(filename, from_number, to_number, datetime, status)
