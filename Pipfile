@@ -17,8 +17,6 @@ typing = "*"
 numpy = "*"
 python-magic = "*"
 psycopg2 = "*"
-urllib3 = "*"
-
 
 [dev-packages]
 pep8 = "*"
