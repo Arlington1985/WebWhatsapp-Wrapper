@@ -53,6 +53,10 @@ try:
     print('Connected to database')
     insert_to_downloads = """INSERT INTO whatsapp.photo_downloads(filename, from_number, to_number, datetime, status, description)
              VALUES(%s, %s, %s, LOCALTIMESTAMP, %s, %s ) RETURNING id;"""
+    
+    insert_to_chats = """INSERT INTO whatsapp.chats(from_number, to_number, datetime, message)
+             VALUES(%s, %s, LOCALTIMESTAMP, %s ) RETURNING id;"""
+
 
     while True:
         time.sleep(3)
@@ -73,6 +77,11 @@ try:
                     logging.info ('-- Chat')
                     logging.info ('safe_content: '+ str(message.safe_content))
                     logging.info ('content: '+ str(message.content))
+                    cur = db_conn.cursor()
+                    cur.execute(insert_to_chats, (str(message.chat_id['user'][:12]), str(mobile_number), str(message.content)))
+                    chat_id = cur.fetchone()[0]
+                    db_conn.commit()
+                    cur.close()
                     # contact.chat.send_message(message.safe_content)
                 elif message.type == 'image' or message.type == 'video' :
                     logging.info ('-- Image or Video')
