@@ -50,7 +50,7 @@ try:
         host = hostname,
         port = port
     )
-    print('Connected to database')
+    logging.info('Connected to database')
     insert_to_downloads = """INSERT INTO whatsapp.downloads(filename, datetime, status, description, message_id, size, mime)
              VALUES(%s, LOCALTIMESTAMP, %s, %s, %s, %s, %s ) RETURNING id;"""
     
@@ -128,7 +128,7 @@ try:
                     logging.info("Comparing with old photos")
                     old_files=[f for f in os.listdir(dirName) if os.path.isfile(os.path.join(dirName, f))]
                     if old_files:
-                        #logging.info(old_files)
+                        logging.debug(old_files)
                         dublicated=False
                         dublicated_with=[]
                         for old_file in old_files:
@@ -170,15 +170,15 @@ except Exception as e:
     logging.exception(e)
     if driver is not None:
         driver.close()
-        print('Selenium driver connection closed')        
+        logging.info('Selenium driver connection closed')        
     if db_conn is not None:
         db_conn.close()
-        print('Database connection closed')
+        logging.info('Database connection closed')
     raise
 finally:
     if driver is not None:
         driver.close()
-        print('Selenium driver connection closed')        
+        logging.info('Selenium driver connection closed')        
     if db_conn is not None:
         db_conn.close()
-        print('Database connection closed')
+        logging.info('Database connection closed')
