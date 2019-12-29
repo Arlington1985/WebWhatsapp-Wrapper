@@ -96,6 +96,7 @@ try:
                     logging.info ('size: '+ str(message.size))
                     logging.info ('mime: '+ str(message.mime))
                     logging.info ('caption: '+ str(message.caption))
+                    logging.info ('media_key: '+ str(message.media_key))
                     logging.info ('client_url: '+ str(message.client_url))
 
                     # Creating directory tree
