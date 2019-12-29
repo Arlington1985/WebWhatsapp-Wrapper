@@ -32,7 +32,7 @@ if not os.path.exists(profiledir):
 driver = WhatsAPIDriver(profile=profiledir, client='remote', command_executor=os.environ["SELENIUM"])
 try:
     logging.info("Waiting for QR")
-    driver.wait_for_login(timeout=60)
+    driver.wait_for_login(timeout=9999999)
     logging.info("Saving session")
     driver.save_firefox_profile(remove_old=True)
     logging.info("Bot started")
