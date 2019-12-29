@@ -52,10 +52,10 @@ try:
     )
     print('Connected to database')
     insert_to_downloads = """INSERT INTO whatsapp.photo_downloads(filename, datetime, status, description, message_id, size, mime)
-             VALUES(%s, LOCALTIMESTAMP, %s, %s, %i, %i, %s ) RETURNING id;"""
+             VALUES(%s, LOCALTIMESTAMP, %s, %s, %s, %s, %s ) RETURNING id;"""
     
     insert_to_chats = """INSERT INTO whatsapp.chats(datetime, message, message_id)
-             VALUES(LOCALTIMESTAMP, %s, %i ) RETURNING id;"""
+             VALUES(LOCALTIMESTAMP, %s, %s ) RETURNING id;"""
 
     insert_to_messages = """INSERT INTO whatsapp.messages(message_id, message_type, message_timestamp, sender_msisdn, sender_name, datetime, receiver_msisdn)
              VALUES(%s, %s, %s, %s, %s, LOCALTIMESTAMP, %s ) RETURNING id;"""
