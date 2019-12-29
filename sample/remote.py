@@ -51,7 +51,7 @@ try:
         port = port
     )
     print('Connected to database')
-    insert_to_downloads = """INSERT INTO whatsapp.photo_downloads(filename, datetime, status, description, message_id, size, mime)
+    insert_to_downloads = """INSERT INTO whatsapp.downloads(filename, datetime, status, description, message_id, size, mime)
              VALUES(%s, LOCALTIMESTAMP, %s, %s, %s, %s, %s ) RETURNING id;"""
     
     insert_to_chats = """INSERT INTO whatsapp.chats(datetime, message, message_id)
