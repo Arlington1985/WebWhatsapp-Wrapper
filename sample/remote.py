@@ -1,4 +1,5 @@
 import os, sys, time, json, filecmp, logging
+from datetime import datetime, timedelta
 from webwhatsapi import WhatsAPIDriver
 from webwhatsapi.objects.message import Message, MediaMessage
 from urllib.parse import urlparse
@@ -69,8 +70,8 @@ try:
         for contact in driver.get_unread(use_unread_count=True, fetch_all_as_unread=True):
             logging.info(contact)
 
-            # Load earlier messages
-            driver.chat_load_earlier_messages(contact.chat.id)
+            # Load earlier messages till 7 days before
+            contact.chat.load_earlier_messages_till(datetime.now() - timedelta(days=7))
             logging.info("Earlier messages loaded for: " +str(contact.chat.id))
             
             # Again get all messages
