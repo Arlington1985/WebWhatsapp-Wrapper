@@ -51,8 +51,8 @@ try:
         port = port
     )
     print('Connected to database')
-    insert_to_downloads = """INSERT INTO whatsapp.photo_downloads(filename, from_number, to_number, datetime, status, description, message_id)
-             VALUES(%s, %s, %s, LOCALTIMESTAMP, %s, %s, %s ) RETURNING id;"""
+    insert_to_downloads = """INSERT INTO whatsapp.photo_downloads(filename, from_number, to_number, datetime, status, description, message_id, size, mime)
+             VALUES(%s, %s, %s, LOCALTIMESTAMP, %s, %s, %s, %i, %s ) RETURNING id;"""
     
     insert_to_chats = """INSERT INTO whatsapp.chats(from_number, to_number, datetime, message, message_id)
              VALUES(%s, %s, LOCALTIMESTAMP, %s, %s ) RETURNING id;"""
@@ -117,7 +117,7 @@ try:
                     except Exception as ex:
                         logging.error("Cannot download photo, skipping")
                         cur = db_conn.cursor()
-                        cur.execute(insert_to_downloads, (str(message.filename), str(message.chat_id['user'][:12]), str(mobile_number), "skipped", None, str(message.id)))
+                        cur.execute(insert_to_downloads, (str(message.filename), str(message.chat_id['user'][:12]), str(mobile_number), "skipped", None, str(message.id), int(message.size), str(message.mime)))
                         photo_id = cur.fetchone()[0]
                         db_conn.commit()
                         cur.close()
@@ -141,7 +141,7 @@ try:
                             os.remove(tmp_file)
                             logging.info("Photo duplicated with "+','.join(dublicated_with)+", removed")
                             cur = db_conn.cursor()
-                            cur.execute(insert_to_downloads, (str(message.filename), str(message.chat_id['user'][:12]), str(mobile_number), "duplicated", f'duplicated with {dublicated_with} file', str(message.id)))
+                            cur.execute(insert_to_downloads, (str(message.filename), str(message.chat_id['user'][:12]), str(mobile_number), "duplicated", f'duplicated with {dublicated_with} file', str(message.id), int(message.size), str(message.mime)))
                             photo_id = cur.fetchone()[0]
                             db_conn.commit()
                             cur.close()
@@ -149,7 +149,7 @@ try:
                             os.rename(tmp_file, os.path.join(dirName, file_split[0]+f"_{last_mnumber}"+file_split[1]))
                             logging.info("Photo moved to permanent location")
                             cur = db_conn.cursor()
-                            cur.execute(insert_to_downloads, (str(message.filename), str(message.chat_id['user'][:12]), str(mobile_number), "downloaded", None, str(message.id)))
+                            cur.execute(insert_to_downloads, (str(message.filename), str(message.chat_id['user'][:12]), str(mobile_number), "downloaded", None, str(message.id), int(message.size), str(message.mime)))
                             photo_id = cur.fetchone()[0]
                             db_conn.commit()
                             cur.close()
@@ -157,7 +157,7 @@ try:
                         os.rename(tmp_file, os.path.join(dirName, file_split[0]+f"_{last_mnumber}"+file_split[1]))
                         logging.info("First download, photo moved to permanent location")
                         cur = db_conn.cursor()
-                        cur.execute(insert_to_downloads, (str(message.filename), str(message.chat_id['user'][:12]), str(mobile_number), "downloaded", None, str(message.id)))
+                        cur.execute(insert_to_downloads, (str(message.filename), str(message.chat_id['user'][:12]), str(mobile_number), "downloaded", None, str(message.id), int(message.size), str(message.mime)))
                         photo_id = cur.fetchone()[0]
                         db_conn.commit()
                         cur.close()
