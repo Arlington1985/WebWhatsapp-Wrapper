@@ -128,7 +128,7 @@ try:
                     logging.info("Comparing with old photos")
                     old_files=[f for f in os.listdir(dirName) if os.path.isfile(os.path.join(dirName, f))]
                     if old_files:
-                        logging.info(old_files)
+                        #logging.info(old_files)
                         dublicated=False
                         dublicated_with=[]
                         for old_file in old_files:
