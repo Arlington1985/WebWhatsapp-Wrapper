@@ -57,7 +57,7 @@ try:
     insert_to_chats = """INSERT INTO whatsapp.chats(datetime, message, message_id)
              VALUES(LOCALTIMESTAMP, %s, %s ) RETURNING id;"""
 
-    insert_to_messages = """INSERT INTO whatsapp.messages(message_id, message_type, message_timestamp, sender_msisdn, sender_name, datetime, receiver_msisdn)
+    insert_to_messages = """INSERT INTO whatsapp.messages(origin_id, message_type, message_timestamp, sender_msisdn, sender_name, datetime, receiver_msisdn)
              VALUES(%s, %s, %s, %s, %s, LOCALTIMESTAMP, %s ) RETURNING id;"""
 
     while True:
