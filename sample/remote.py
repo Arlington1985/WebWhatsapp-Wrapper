@@ -60,7 +60,7 @@ try:
     insert_to_messages = """INSERT INTO whatsapp.messages(origin_id, message_type, message_timestamp, sender_msisdn, sender_name, datetime, receiver_msisdn)
              VALUES(%s, %s, %s, %s, %s, LOCALTIMESTAMP, %s ) RETURNING id;"""
 
-    check_if_processed = """SELECT datetime from whatsapp.messages where origin_id=%s order by datetime limit 1 ;"""
+    check_if_processed = """SELECT datetime from whatsapp.messages where origin_id=%s order by datetime limit 1;"""
 
 
     while True:
@@ -89,7 +89,7 @@ try:
                 logging.info ('sender.safe_name: '+ str(message.sender.get_safe_name()))
                 
                 cur = db_conn.cursor()
-                cur.execute(check_if_processed, (str(message.id)))
+                cur.execute(check_if_processed, (str(message.id), ))
                 result_set=cur.fetchone()
                 cur.close()
                 if len(result_set)==0: 
