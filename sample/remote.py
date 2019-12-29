@@ -70,8 +70,8 @@ try:
         for contact in driver.get_unread(use_unread_count=True, fetch_all_as_unread=True):
             logging.info(contact)
 
-            # Load earlier messages till 7 days before
-            contact.chat.load_earlier_messages_till(datetime.now() - timedelta(days=7))
+            # Load earlier messages till 5 days before
+            contact.chat.load_earlier_messages_till(datetime.now() - timedelta(days=5))
             logging.info("Earlier messages loaded for: " +str(contact.chat.id))
             
             # Again get all messages
