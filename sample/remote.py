@@ -192,17 +192,17 @@ try:
             logging.info("Sent seen request")
 except Exception as e:
     logging.exception(e)
-    if driver is not None:
+    if 'driver' in locals() and driver is not None:
         driver.close()
         logging.info('Selenium driver connection closed')        
-    if db_conn is not None:
+    if 'db_conn' in locals() and db_conn is not None:
         db_conn.close()
         logging.info('Database connection closed')
     raise
 finally:
-    if driver is not None:
+    if 'driver' in locals() and driver is not None:
         driver.close()
         logging.info('Selenium driver connection closed')        
-    if db_conn is not None:
+    if 'db_conn' in locals() and db_conn is not None:
         db_conn.close()
         logging.info('Database connection closed')
