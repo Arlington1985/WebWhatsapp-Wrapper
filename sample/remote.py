@@ -92,7 +92,7 @@ try:
                 cur.execute(check_if_processed, (str(message.id), ))
                 result_set=cur.fetchone()
                 cur.close()
-                if len(result_set)==0: 
+                if result_set is None: 
                     cur = db_conn.cursor()
                     cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
                     message_id = cur.fetchone()[0]
