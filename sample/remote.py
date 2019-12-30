@@ -72,11 +72,11 @@ try:
         for contact in driver.get_unread(use_unread_count=True, fetch_all_as_unread=True):
             logging.info(contact)
 
-            # Load earlier messages till 5 days before
+            # Load all earlier messages
             contact.chat.load_all_earlier_messages()
             logging.info("Earlier messages loaded for: " +str(contact.chat.id))
             
-            # Again get all messages
+            # Get loaded messages
             messages=contact.chat.get_messages()
             logging.info("Loaded message count: " +str(len(messages)))
 
@@ -96,16 +96,13 @@ try:
                 result_set=cur.fetchone()
                 cur.close()
                 if result_set is None: 
-                    cur = db_conn.cursor()
-                    cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
-                    message_id = cur.fetchone()[0]
-                    db_conn.commit()
-                    cur.close()
                     if message.type == 'chat':
                         logging.info ('-- Chat')
                         logging.info ('safe_content: '+ str(message.safe_content))
                         logging.info ('content: '+ str(message.content))
                         cur = db_conn.cursor()
+                        cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
+                        message_id = cur.fetchone()[0]
                         cur.execute(insert_to_chats, (str(message.content), int(message_id)))
                         chat_id = cur.fetchone()[0]
                         db_conn.commit()
@@ -140,12 +137,14 @@ try:
                         except (Exception, FunctionTimedOut) as ex:
                             logging.error("Cannot download photo, skipping")
                             cur = db_conn.cursor()
+                            cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
+                            message_id = cur.fetchone()[0]
                             cur.execute(insert_to_downloads, (str(message.filename), "skipped", None, int(message_id), int(message.size), str(message.mime), str(message.caption), str(message.media_key)))
                             download_id = cur.fetchone()[0]
                             db_conn.commit()
                             cur.close()
                             continue
-
+                        
                         #driver.delete_message(contact.chat.id,message)
                         logging.info("Photo downloaded to "+tmp_file)
                         logging.info("Comparing with old photos")
@@ -164,6 +163,8 @@ try:
                                 os.remove(tmp_file)
                                 logging.info("Photo duplicated with "+','.join(dublicated_with)+", removed")
                                 cur = db_conn.cursor()
+                                cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
+                                message_id = cur.fetchone()[0]
                                 cur.execute(insert_to_downloads, (str(message.filename), "duplicated", f"duplicated with {','.join(dublicated_with)} file", int(message_id), int(message.size), str(message.mime), str(message.caption), str(message.media_key)))
                                 photo_id = cur.fetchone()[0]
                                 db_conn.commit()
@@ -172,6 +173,8 @@ try:
                                 os.rename(tmp_file, os.path.join(dirName, file_split[0]+f"_{last_mnumber}"+file_split[1]))
                                 logging.info("Photo moved to permanent location")
                                 cur = db_conn.cursor()
+                                cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
+                                message_id = cur.fetchone()[0]    
                                 cur.execute(insert_to_downloads, (str(message.filename), "downloaded", None, int(message_id), int(message.size), str(message.mime), str(message.caption), str(message.media_key)))
                                 photo_id = cur.fetchone()[0]
                                 db_conn.commit()
@@ -180,6 +183,8 @@ try:
                             os.rename(tmp_file, os.path.join(dirName, file_split[0]+f"_{last_mnumber}"+file_split[1]))
                             logging.info("First download, photo moved to permanent location")
                             cur = db_conn.cursor()
+                            cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
+                            message_id = cur.fetchone()[0]
                             cur.execute(insert_to_downloads, (str(message.filename), "downloaded", None, int(message_id), int(message.size), str(message.mime), str(message.caption), str(message.media_key)))
                             photo_id = cur.fetchone()[0]
                             db_conn.commit()
