@@ -99,23 +99,22 @@ try:
                 logging.info ('sender.id: '+ str(message.sender.id))
                 logging.info ('sender.safe_name: '+ str(message.sender.get_safe_name()))
                 
-                cur = db_conn.cursor()
-                cur.execute(check_if_processed, (str(message.id), ))
-                result_set=cur.fetchone()
-                cur.close()
+                with db_conn.cursor() as cur:
+                    cur.execute(check_if_processed, (str(message.id), ))
+                    result_set=cur.fetchone()
+
                 if result_set is None: 
                     if message.type == 'chat':
                         logging.info ('-- Chat')
                         logging.info ('safe_content: '+ str(message.safe_content))
                         logging.info ('content: '+ str(message.content))
-                        cur = db_conn.cursor()
-                        cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
-                        message_id = cur.fetchone()[0]
-                        cur.execute(insert_to_chats, (str(message.content), int(message_id)))
-                        chat_id = cur.fetchone()[0]
-                        db_conn.commit()
-                        cur.close()
-                        # contact.chat.send_message(message.safe_content)
+                        with db_conn.cursor() as cur:
+                            cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
+                            message_id = cur.fetchone()[0]
+                            cur.execute(insert_to_chats, (str(message.content), int(message_id)))
+                            chat_id = cur.fetchone()[0]
+                            db_conn.commit()
+
                     elif message.type == 'image' or message.type == 'video' :
                         logging.info ('-- Image or Video')
                         logging.info ('filename: '+ str(message.filename))
@@ -135,13 +134,12 @@ try:
                             logging.error("Cannot download photo, skipping")
                             status='skipped'
                             
-                        cur = db_conn.cursor()
-                        cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
-                        message_id = cur.fetchone()[0]
-                        cur.execute(insert_to_downloads, (str(message.filename), status, None, int(message_id), int(message.size), str(message.mime), str(message.caption), str(message.media_key)))
-                        download_id = cur.fetchone()[0]
-                        db_conn.commit()
-                        cur.close()
+                        with db_conn.cursor() as cur:
+                            cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
+                            message_id = cur.fetchone()[0]
+                            cur.execute(insert_to_downloads, (str(message.filename), status, None, int(message_id), int(message.size), str(message.mime), str(message.caption), str(message.media_key)))
+                            download_id = cur.fetchone()[0]
+                            db_conn.commit()
 
 
                         # tmp_dir=os.path.join(dirName,"tmp")
