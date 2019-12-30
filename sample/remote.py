@@ -65,24 +65,27 @@ try:
 
     check_if_processed = """SELECT datetime from whatsapp.messages where origin_id=%s order by datetime limit 1;"""
 
-
+    load_earlier_messages=False
     while True:
         time.sleep(3)
         logging.info('Checking for more messages, status, '+ driver.get_status())
         for contact in driver.get_unread(use_unread_count=True, fetch_all_as_unread=True):
             logging.info(contact)
 
-            # Load all earlier messages
-            if contact.chat.are_all_messages_loaded()==False:
-                logging.info("Loading all earlier messages for: " +str(contact.chat.id)+"...")
-                contact.chat.load_all_earlier_messages()
-                logging.info("Earlier messages loaded for: " +str(contact.chat.id))
+            if load_earlier_messages==True:
+                # Load all earlier messages
+                if contact.chat.are_all_messages_loaded()==False:
+                    logging.info("Loading all earlier messages for: " +str(contact.chat.id)+"...")
+                    contact.chat.load_all_earlier_messages()
+                    logging.info("Earlier messages loaded for: " +str(contact.chat.id))
+                else:
+                    logging.info("All messages already loaded for: " +str(contact.chat.id))
+                
+                # Get loaded messages
+                messages=contact.chat.get_messages()
             else:
-                logging.info("All messages already loaded for: " +str(contact.chat.id))
+                messages=contact.messages
             
-            
-            # Get loaded messages
-            messages=contact.chat.get_messages()
             logging.info("Loaded message count: " +str(len(messages)))
 
             for message in messages:
