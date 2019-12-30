@@ -73,8 +73,13 @@ try:
             logging.info(contact)
 
             # Load all earlier messages
-            contact.chat.load_all_earlier_messages()
-            logging.info("Earlier messages loaded for: " +str(contact.chat.id))
+            if contact.chat.are_all_messages_loaded()==False:
+                logging.info("Loading all earlier messages for: " +str(contact.chat.id)+"...")
+                contact.chat.load_all_earlier_messages()
+                logging.info("Earlier messages loaded for: " +str(contact.chat.id))
+            else:
+                logging.info("All messages already loaded for: " +str(contact.chat.id))
+            
             
             # Get loaded messages
             messages=contact.chat.get_messages()
