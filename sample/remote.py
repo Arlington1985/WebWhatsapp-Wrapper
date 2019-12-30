@@ -4,6 +4,8 @@ from webwhatsapi import WhatsAPIDriver
 from webwhatsapi.objects.message import Message, MediaMessage
 from urllib.parse import urlparse
 import psycopg2
+from func_timeout import func_timeout, FunctionTimedOut
+
 
 
 logging.basicConfig(level=logging.INFO)
@@ -71,7 +73,7 @@ try:
             logging.info(contact)
 
             # Load earlier messages till 5 days before
-            contact.chat.load_earlier_messages_till(datetime.now() - timedelta(days=5))
+            contact.chat.load_all_earlier_messages()
             logging.info("Earlier messages loaded for: " +str(contact.chat.id))
             
             # Again get all messages
@@ -132,9 +134,10 @@ try:
 
                         # Downloading file
                         try:
-                            tmp_file=message.save_media(tmp_dir, force_download = True)
+                            tmp_file=func_timeout(5, message.save_media, args=(tmp_dir, force_download = True))
+                            #tmp_file=message.save_media(tmp_dir, force_download = True)
                             file_split=os.path.splitext(os.path.basename(tmp_file))
-                        except Exception as ex:
+                        except (Exception, FunctionTimedOut) as ex:
                             logging.error("Cannot download photo, skipping")
                             cur = db_conn.cursor()
                             cur.execute(insert_to_downloads, (str(message.filename), "skipped", None, int(message_id), int(message.size), str(message.mime), str(message.caption), str(message.media_key)))

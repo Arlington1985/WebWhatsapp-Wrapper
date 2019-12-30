@@ -17,6 +17,8 @@ typing = "*"
 numpy = "*"
 python-magic = "*"
 psycopg2 = "*"
+func-timeout = "*"
+
 
 [dev-packages]
 pep8 = "*"
