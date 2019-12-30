@@ -62,6 +62,9 @@ class Chat(WhatsappObjectWithId):
     # get_unread_messages()
 
 
+    def are_all_messages_loaded(self):
+        return self.driver.are_all_messages_loaded(self.id)
+
     def load_earlier_messages(self):
         self.driver.chat_load_earlier_messages(self.id)
 
