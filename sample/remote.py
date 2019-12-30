@@ -134,7 +134,7 @@ try:
 
                         # Downloading file
                         try:
-                            tmp_file=func_timeout(5, message.save_media, args=(tmp_dir, force_download = True))
+                            tmp_file=func_timeout(5, message.save_media, args=(tmp_dir, True))
                             #tmp_file=message.save_media(tmp_dir, force_download = True)
                             file_split=os.path.splitext(os.path.basename(tmp_file))
                         except (Exception, FunctionTimedOut) as ex:
