@@ -124,76 +124,94 @@ try:
 
                         # Creating directory tree
                         dirName=os.path.join("/wphotos", message.chat_id['user'][:12])
-                        tmp_dir=os.path.join(dirName,"tmp")
-
-                        if not os.path.exists(tmp_dir):
-                            # Will create dirName and tmp_dir in one shoot
-                            # exist_ok=True, because of paralel execution in another container, to avoid race condition 
-                            os.makedirs(tmp_dir, exist_ok=True)
-                            logging.info("Directory set " + tmp_dir +  " was created ")
-                        else:
-                            logging.info("Directory set " + tmp_dir + " already exists")
-
-                        # Downloading file
                         try:
-                            tmp_file=func_timeout(5, message.save_media, args=(tmp_dir, True))
-                            #tmp_file=message.save_media(tmp_dir, force_download = True)
-                            file_split=os.path.splitext(os.path.basename(tmp_file))
+                            downloaded_file=func_timeout(5, message.save_media, args=(dirName, True))
+                            logging.info(f"Photo downloaded to {dirName} folder")
+                            status='downloaded'
                         except (Exception, FunctionTimedOut) as ex:
                             logging.error("Cannot download photo, skipping")
-                            cur = db_conn.cursor()
-                            cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
-                            message_id = cur.fetchone()[0]
-                            cur.execute(insert_to_downloads, (str(message.filename), "skipped", None, int(message_id), int(message.size), str(message.mime), str(message.caption), str(message.media_key)))
-                            download_id = cur.fetchone()[0]
-                            db_conn.commit()
-                            cur.close()
-                            continue
+                            status='skipped'
+                            
+                        cur = db_conn.cursor()
+                        cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
+                        message_id = cur.fetchone()[0]
+                        cur.execute(insert_to_downloads, (str(message.filename), status, None, int(message_id), int(message.size), str(message.mime), str(message.caption), str(message.media_key)))
+                        download_id = cur.fetchone()[0]
+                        db_conn.commit()
+                        cur.close()
+
+
+                        # tmp_dir=os.path.join(dirName,"tmp")
+
+                        # if not os.path.exists(tmp_dir):
+                        #     # Will create dirName and tmp_dir in one shoot
+                        #     # exist_ok=True, because of paralel execution in another container, to avoid race condition 
+                        #     os.makedirs(tmp_dir, exist_ok=True)
+                        #     logging.info("Directory set " + tmp_dir +  " was created ")
+                        # else:
+                        #     logging.info("Directory set " + tmp_dir + " already exists")
+
+                        # # Downloading file
+                        # try:
+                        #     tmp_file=func_timeout(5, message.save_media, args=(tmp_dir, True))
+                        #     #tmp_file=message.save_media(tmp_dir, force_download = True)
+                        #     file_split=os.path.splitext(os.path.basename(tmp_file))
+                        # except (Exception, FunctionTimedOut) as ex:
+                        #     logging.error("Cannot download photo, skipping")
+                        #     cur = db_conn.cursor()
+                        #     cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
+                        #     message_id = cur.fetchone()[0]
+                        #     cur.execute(insert_to_downloads, (str(message.filename), "skipped", None, int(message_id), int(message.size), str(message.mime), str(message.caption), str(message.media_key)))
+                        #     download_id = cur.fetchone()[0]
+                        #     db_conn.commit()
+                        #     cur.close()
+                        #     continue
                         
-                        #driver.delete_message(contact.chat.id,message)
-                        logging.info("Photo downloaded to "+tmp_file)
-                        logging.info("Comparing with old photos")
-                        old_files=[f for f in os.listdir(dirName) if os.path.isfile(os.path.join(dirName, f))]
-                        if old_files:
-                            logging.debug(old_files)
-                            dublicated=False
-                            dublicated_with=[]
-                            for old_file in old_files:
-                                if filecmp.cmp(os.path.abspath(os.path.join(dirName, old_file)), tmp_file):
-                                    dublicated=True
-                                    dublicated_with.append(old_file)
+                        # #driver.delete_message(contact.chat.id,message)
+                        # logging.info("Photo downloaded to "+tmp_file)
+                        # logging.info("Comparing with old photos")
+                        # old_files=[f for f in os.listdir(dirName) if os.path.isfile(os.path.join(dirName, f))]
+                        # if old_files:
+                        #     logging.debug(old_files)
+                        #     dublicated=False
+                        #     dublicated_with=[]
+                        #     for old_file in old_files:
+                        #         if filecmp.cmp(os.path.abspath(os.path.join(dirName, old_file)), tmp_file):
+                        #             dublicated=True
+                        #             dublicated_with.append(old_file)
 
                                     
-                            if dublicated:
-                                os.remove(tmp_file)
-                                logging.info("Photo duplicated with "+','.join(dublicated_with)+", removed")
-                                cur = db_conn.cursor()
-                                cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
-                                message_id = cur.fetchone()[0]
-                                cur.execute(insert_to_downloads, (str(message.filename), "duplicated", f"duplicated with {','.join(dublicated_with)} file", int(message_id), int(message.size), str(message.mime), str(message.caption), str(message.media_key)))
-                                photo_id = cur.fetchone()[0]
-                                db_conn.commit()
-                                cur.close()
-                            else:
-                                os.rename(tmp_file, os.path.join(dirName, file_split[0]+f"_{last_mnumber}"+file_split[1]))
-                                logging.info("Photo moved to permanent location")
-                                cur = db_conn.cursor()
-                                cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
-                                message_id = cur.fetchone()[0]    
-                                cur.execute(insert_to_downloads, (str(message.filename), "downloaded", None, int(message_id), int(message.size), str(message.mime), str(message.caption), str(message.media_key)))
-                                photo_id = cur.fetchone()[0]
-                                db_conn.commit()
-                                cur.close()
-                        else:
-                            os.rename(tmp_file, os.path.join(dirName, file_split[0]+f"_{last_mnumber}"+file_split[1]))
-                            logging.info("First download, photo moved to permanent location")
-                            cur = db_conn.cursor()
-                            cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
-                            message_id = cur.fetchone()[0]
-                            cur.execute(insert_to_downloads, (str(message.filename), "downloaded", None, int(message_id), int(message.size), str(message.mime), str(message.caption), str(message.media_key)))
-                            photo_id = cur.fetchone()[0]
-                            db_conn.commit()
-                            cur.close()
+                        #     if dublicated:
+                        #         os.remove(tmp_file)
+                        #         logging.info("Photo duplicated with "+','.join(dublicated_with)+", removed")
+                        #         cur = db_conn.cursor()
+                        #         cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
+                        #         message_id = cur.fetchone()[0]
+                        #         cur.execute(insert_to_downloads, (str(message.filename), "duplicated", f"duplicated with {','.join(dublicated_with)} file", int(message_id), int(message.size), str(message.mime), str(message.caption), str(message.media_key)))
+                        #         photo_id = cur.fetchone()[0]
+                        #         db_conn.commit()
+                        #         cur.close()
+                        #     else:
+                        #         os.rename(tmp_file, os.path.join(dirName, file_split[0]+f"_{last_mnumber}"+file_split[1]))
+                        #         logging.info("Photo moved to permanent location")
+                        #         cur = db_conn.cursor()
+                        #         cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
+                        #         message_id = cur.fetchone()[0]    
+                        #         cur.execute(insert_to_downloads, (str(message.filename), "downloaded", None, int(message_id), int(message.size), str(message.mime), str(message.caption), str(message.media_key)))
+                        #         photo_id = cur.fetchone()[0]
+                        #         db_conn.commit()
+                        #         cur.close()
+                        # else:
+                        #     os.rename(tmp_file, os.path.join(dirName, file_split[0]+f"_{last_mnumber}"+file_split[1]))
+                        #     logging.info("First download, photo moved to permanent location")
+                        #     cur = db_conn.cursor()
+                        #     cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
+                        #     message_id = cur.fetchone()[0]
+                        #     cur.execute(insert_to_downloads, (str(message.filename), "downloaded", None, int(message_id), int(message.size), str(message.mime), str(message.caption), str(message.media_key)))
+                        #     photo_id = cur.fetchone()[0]
+                        #     db_conn.commit()
+                        #     cur.close()
+                        
                         #contact.chat.send_message("Photo received")
                     else:
                         logging.info ('-- Other')
