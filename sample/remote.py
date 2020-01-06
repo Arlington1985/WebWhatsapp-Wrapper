@@ -128,6 +128,8 @@ try:
                         dirName=os.path.join("/wphotos", message.chat_id['user'][:12])
                         try:
                             downloaded_file=func_timeout(5, message.save_media, args=(dirName, True))
+                            file_split=os.path.splitext(os.path.basename(downloaded_file))
+                            os.rename(downloaded_file, os.path.join(dirName, file_split[0]+f"_{last_mnumber}"+file_split[1]))
                             logging.info(f"Photo downloaded to {dirName} folder")
                             status='downloaded'
                         except (Exception, FunctionTimedOut) as ex:
