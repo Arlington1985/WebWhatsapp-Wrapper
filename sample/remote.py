@@ -126,10 +126,11 @@ try:
 
                         # Creating directory tree
                         dirName=os.path.join("/wphotos", message.chat_id['user'][:12])
+                        file_split=os.path.splitext(str(message.filename))
+                        new_file_name=file_split[0]+f"_{last_mnumber}"+file_split[1]
                         try:
                             downloaded_file=func_timeout(5, message.save_media, args=(dirName, True))
-                            file_split=os.path.splitext(os.path.basename(downloaded_file))
-                            os.rename(downloaded_file, os.path.join(dirName, file_split[0]+f"_{last_mnumber}"+file_split[1]))
+                            os.rename(downloaded_file, os.path.join(dirName, new_file_name))
                             logging.info(f"Photo downloaded to {dirName} folder")
                             status='downloaded'
                         except (Exception, FunctionTimedOut) as ex:
@@ -139,7 +140,7 @@ try:
                         with db_conn.cursor() as cur:
                             cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
                             message_id = cur.fetchone()[0]
-                            cur.execute(insert_to_downloads, (str(message.filename), status, None, int(message_id), int(message.size), str(message.mime), str(message.caption), str(message.media_key)))
+                            cur.execute(insert_to_downloads, (new_file_name, status, None, int(message_id), int(message.size), str(message.mime), str(message.caption), str(message.media_key)))
                             download_id = cur.fetchone()[0]
                             db_conn.commit()
 
