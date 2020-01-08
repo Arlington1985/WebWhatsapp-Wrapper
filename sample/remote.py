@@ -63,7 +63,7 @@ try:
     insert_to_messages = """INSERT INTO whatsapp.messages(origin_id, message_type, message_timestamp, sender_msisdn, sender_name, datetime, receiver_msisdn)
              VALUES(%s, %s, %s, %s, %s, LOCALTIMESTAMP, %s ) RETURNING id;"""
 
-    check_if_processed = """SELECT datetime from whatsapp.messages m, whatsapp.downloads d WHERE d.status!='skipped' and m.id=d.message_id AND m.origin_id=%s ORDER BY datetime LIMIT 1;"""
+    check_if_processed = """SELECT d.datetime from whatsapp.messages m, whatsapp.downloads d WHERE d.status!='skipped' and m.id=d.message_id AND m.origin_id=%s ORDER BY d.datetime LIMIT 1;"""
 
     load_earlier_messages=False
     while True:
