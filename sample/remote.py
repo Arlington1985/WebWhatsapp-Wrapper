@@ -63,7 +63,7 @@ try:
     insert_to_messages = """INSERT INTO whatsapp.messages(origin_id, message_type, message_timestamp, sender_msisdn, sender_name, datetime, receiver_msisdn)
              VALUES(%s, %s, %s, %s, %s, LOCALTIMESTAMP, %s ) RETURNING id;"""
 
-    check_if_processed = """SELECT d.datetime from whatsapp.messages m, whatsapp.downloads d WHERE d.status!='skipped' and m.id=d.message_id AND m.origin_id=%s ORDER BY d.datetime LIMIT 1;"""
+    check_if_processed = """SELECT a.status, MAX(a.datetime) latest_process_time, COUNT(0) FROM (SELECT d.status, d.datetime FROM whatsapp.messages m, whatsapp.downloads d WHERE m.id=d.message_id AND m.origin_id=%s) a GROUP BY a.status HAVING status!='skipped' AND COUNT(0)>3 LIMIT 1;"""
 
     load_earlier_messages=False
     while True:
