@@ -129,12 +129,12 @@ try:
                         file_split=os.path.splitext(str(message.filename))
                         new_file_name=file_split[0]+f"_{last_mnumber}"+file_split[1]
                         try:
-                            downloaded_file=func_timeout(5, message.save_media, args=(dirName, True))
+                            downloaded_file=func_timeout(10, message.save_media, args=(dirName, True))
                             os.rename(downloaded_file, os.path.join(dirName, new_file_name))
                             logging.info(f"Photo downloaded to {dirName} folder")
                             status='downloaded'
                         except (Exception, FunctionTimedOut) as ex:
-                            logging.error("Cannot download photo, skipping")
+                            logging.exception("Cannot download photo, skipping")
                             status='skipped'
                             
                         with db_conn.cursor() as cur:
