@@ -127,11 +127,10 @@ try:
                         # Creating directory tree
                         dirName=os.path.join("/wphotos", message.chat_id['user'][:12])
                         if not os.path.exists(dirName):
-                             # Will create dirName and tmp_dir in one shoot
                              # exist_ok=True, because of paralel execution in another container, to avoid race condition 
                              os.makedirs(dirName, exist_ok=True)
                              logging.info("Directory set " + dirName +  " was created ")
-                         else:
+                        else:
                              logging.info("Directory set " + dirName + " already exists")
                         
                         file_split=os.path.splitext(str(message.filename))
