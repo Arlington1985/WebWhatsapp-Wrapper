@@ -65,7 +65,7 @@ try:
 
     check_if_processed = """SELECT MAX(a.datetime) latest_process_time FROM (SELECT d.status, d.datetime FROM whatsapp.messages m, whatsapp.downloads d WHERE m.id=d.message_id AND m.origin_id=%s) a GROUP BY a.status HAVING status!='skipped' OR COUNT(0)>3 ORDER BY latest_process_time DESC LIMIT 1;"""
 
-    load_earlier_messages=False
+    load_earlier_messages=True
     while True:
         time.sleep(3)
         logging.info('Checking for more messages, status, '+ driver.get_status())
@@ -75,8 +75,8 @@ try:
             if load_earlier_messages==True:
                 # Load all earlier messages
                 if contact.chat.are_all_messages_loaded()==False:
-                    logging.info("Loading all earlier messages for: " +str(contact.chat.id)+"...")
-                    contact.chat.load_all_earlier_messages()
+                    logging.info("Loading earlier messages for: " +str(contact.chat.id)+"...")
+                    contact.chat.load_earlier_messages()
                     logging.info("Earlier messages loaded for: " +str(contact.chat.id))
                 else:
                     logging.info("All messages already loaded for: " +str(contact.chat.id))
@@ -126,10 +126,18 @@ try:
 
                         # Creating directory tree
                         dirName=os.path.join("/wphotos", message.chat_id['user'][:12])
+                        if not os.path.exists(dirName):
+                             # Will create dirName and tmp_dir in one shoot
+                             # exist_ok=True, because of paralel execution in another container, to avoid race condition 
+                             os.makedirs(dirName, exist_ok=True)
+                             logging.info("Directory set " + dirName +  " was created ")
+                         else:
+                             logging.info("Directory set " + dirName + " already exists")
+                        
                         file_split=os.path.splitext(str(message.filename))
                         new_file_name=file_split[0]+f"_{last_mnumber}"+file_split[1]
                         try:
-                            downloaded_file=func_timeout(10, message.save_media, args=(dirName, True))
+                            downloaded_file=func_timeout(5, message.save_media, args=(dirName, True))
                             os.rename(downloaded_file, os.path.join(dirName, new_file_name))
                             logging.info(f"Photo downloaded to {dirName} folder")
                             status='downloaded'
