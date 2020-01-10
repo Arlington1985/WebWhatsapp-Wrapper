@@ -901,16 +901,14 @@ window.WAPI.getUnreadMessages = function (includeMe, includeNotifications, use_u
                                 //all_messages=WAPI.getChat(messageGroupObj.id).loadEarlierMsgs()
                                 //console.log("------")
                                 //console.log(all_messages)
-                                console.log("---messages---")
-                                console.log(messages)
+                                //console.log("---messages---")
+                                //console.log(messages)
 
                                 //const messages = messageGroupObj.msgs._models;
                                 for (let i = messages.length - 1; i >= 0; i--) {
                                     let messageObj = messages[i];
                                     let message = WAPI.processMessageObj(messageObj, includeMe, includeNotifications);
-                                    if (message) {
-                                        messageGroup.messages.push(message);
-                                    }
+                                    messageGroup.messages.unshift(message);
                                 }
                             }
                             else {
