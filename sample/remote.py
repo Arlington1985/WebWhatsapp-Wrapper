@@ -72,7 +72,7 @@ try:
         for contact in driver.get_unread(use_unread_count=True, fetch_all_as_unread=True):
             logging.info(contact)
 
-            print(vars(contact.chat.get_js_obj()))
+            print(contact.chat.unreadCount)
             if load_earlier_messages==True:
                 # Load all earlier messages
                 if contact.chat.are_all_messages_loaded()==False:
