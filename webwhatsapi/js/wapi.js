@@ -910,6 +910,10 @@ window.WAPI.getUnreadMessages = function (includeMe, includeNotifications, use_u
                                     let message = WAPI.processMessageObj(messageObj, includeMe, includeNotifications);
                                     messageGroup.messages.unshift(message);
                                 }
+                                console.log("------")
+                                console.log(messageGroup)
+
+
                             }
                             else {
                                 // Will fetch last message from chat
@@ -924,6 +928,8 @@ window.WAPI.getUnreadMessages = function (includeMe, includeNotifications, use_u
                 }
                 if (messageGroup.messages.length > 0) {
                     messageGroupObj.unreadCount = 0; // reset unread counter
+                    console.log("---son---")
+                    console.log(messageGroup)
                     output.push(messageGroup);
                 }
             }
