@@ -63,7 +63,7 @@ try:
     insert_to_messages = """INSERT INTO whatsapp.messages(origin_id, message_type, message_timestamp, sender_msisdn, sender_name, datetime, receiver_msisdn)
              VALUES(%s, %s, %s, %s, %s, LOCALTIMESTAMP, %s ) RETURNING id;"""
 
-    check_if_processed = """SELECT MAX(a.datetime) latest_process_time FROM (SELECT d.status, d.datetime FROM whatsapp.messages m, whatsapp.downloads d WHERE m.id=d.message_id AND m.origin_id=%s) a GROUP BY a.status HAVING status!='skipped' OR COUNT(0)>3 ORDER BY latest_process_time DESC LIMIT 1;"""
+    check_if_processed = """SELECT MAX(a.datetime) latest_process_time FROM (SELECT d.status, d.datetime FROM whatsapp.messages m, whatsapp.downloads d WHERE m.id=d.message_id AND m.origin_id=%s) a GROUP BY a.status HAVING status!='skipped' ORDER BY latest_process_time DESC LIMIT 1;"""
 
     load_earlier_messages=True
     while True:
@@ -76,8 +76,8 @@ try:
             if load_earlier_messages==True and contact.chat.get_js_obj()['unreadCount']==-1:
                 # Load all earlier messages
                 if contact.chat.are_all_messages_loaded()==False:
-                    logging.info("Loading all earlier messages for: " +str(contact.chat.id)+"...")
-                    contact.chat.load_all_earlier_messages()
+                    logging.info("Loading earlier messages for: " +str(contact.chat.id)+"...")
+                    contact.chat.load_earlier_messages()
                     logging.info("Earlier messages loaded for: " +str(contact.chat.id))
                 else:
                     logging.info("All messages already loaded for: " +str(contact.chat.id))
