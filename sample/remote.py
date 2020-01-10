@@ -65,15 +65,15 @@ try:
 
     check_if_processed = """SELECT MAX(a.datetime) latest_process_time FROM (SELECT d.status, d.datetime FROM whatsapp.messages m, whatsapp.downloads d WHERE m.id=d.message_id AND m.origin_id=%s) a GROUP BY a.status HAVING status!='skipped' OR COUNT(0)>3 ORDER BY latest_process_time DESC LIMIT 1;"""
 
-    load_earlier_messages=False
+    load_earlier_messages=True
     while True:
         time.sleep(3)
         logging.info('Checking for more messages, status, '+ driver.get_status())
         for contact in driver.get_unread(use_unread_count=True, fetch_all_as_unread=True):
             logging.info(contact)
 
-            print(contact.chat.get_js_obj()['unreadCount'])
-            if load_earlier_messages==True:
+            
+            if load_earlier_messages==True and contact.chat.get_js_obj()['unreadCount']==-1:
                 # Load all earlier messages
                 if contact.chat.are_all_messages_loaded()==False:
                     logging.info("Loading earlier messages for: " +str(contact.chat.id)+"...")
