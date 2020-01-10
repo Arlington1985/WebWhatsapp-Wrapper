@@ -71,8 +71,13 @@ try:
         logging.info('Checking for more messages, status, '+ driver.get_status())
         for contact in driver.get_unread(use_unread_count=True, fetch_all_as_unread=True):
             logging.info(contact)
-            print(dir(contact.chat))
-            print(dir(contact.messages))
+
+            print("---------dir------------")
+            print(dir(contact.chat.get_js_obj()))
+            
+            print("----------vars----------")
+            print(vars(contact.chat))
+            print(vars(contact.chat.get_js_obj()))
 
             if load_earlier_messages==True:
                 # Load all earlier messages
