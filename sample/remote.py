@@ -65,7 +65,7 @@ try:
 
     check_if_processed = """SELECT MAX(a.datetime) latest_process_time FROM (SELECT d.status, d.datetime FROM whatsapp.messages m, whatsapp.downloads d WHERE m.id=d.message_id AND m.origin_id=%s) a GROUP BY a.status HAVING status!='skipped' OR COUNT(0)>3 ORDER BY latest_process_time DESC LIMIT 1;"""
 
-    load_earlier_messages=True
+    load_earlier_messages=False
     while True:
         time.sleep(3)
         logging.info('Checking for more messages, status, '+ driver.get_status())
