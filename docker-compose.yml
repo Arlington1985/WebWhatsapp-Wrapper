@@ -165,7 +165,7 @@ services:
      image: webwhatsapp-wrapper
      build: .
      environment:
-       - SELENIUM=http://firefox_994708394417:4445/wd/hub
+       - SELENIUM=http://firefox_994708394417:4444/wd/hub
        - MOBILE_NUMBER=994708394417
        - DATABASE_URL
      volumes:
