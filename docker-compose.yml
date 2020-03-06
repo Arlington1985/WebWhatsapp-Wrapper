@@ -146,6 +146,41 @@ services:
        driver: syslog
        options: 
          tag: "{{.Name}}/{{.ID}}"
+
+  # 5th mobile number
+  firefox_994708394417:
+    container_name: firefox_994708394417
+    image: selenium/standalone-firefox-debug:3.14.0-curium
+    ports:
+      - "4445:4444"
+      - "5905:5900"
+    volumes:
+      - "/dev/shm:/dev/shm"
+    networks:
+      - selenium
+    restart: on-failure
+
+  whatsapp_994708394417:
+     container_name: whatsapp_994708394417
+     image: webwhatsapp-wrapper
+     build: .
+     environment:
+       - SELENIUM=http://firefox_994708394417:4445/wd/hub
+       - MOBILE_NUMBER=994708394417
+       - DATABASE_URL
+     volumes:
+       - ".:/app"
+       - "/media/wphotos:/wphotos"
+     command: /app/docker-entrypoint.sh
+     networks:
+       - selenium
+     depends_on:
+       - firefox_994708394417
+     restart: on-failure
+     logging:
+       driver: syslog
+       options: 
+         tag: "{{.Name}}/{{.ID}}"  
        
 
 
