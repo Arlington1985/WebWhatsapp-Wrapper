@@ -1,3 +1,4 @@
+# Libraies
 import os, sys, time, json, filecmp, logging
 from datetime import datetime, timedelta
 from webwhatsapi import WhatsAPIDriver
@@ -7,7 +8,80 @@ import psycopg2
 from func_timeout import func_timeout, FunctionTimedOut
 
 
+# Procedures
+def process_messages(messages):
+    logging.info("Loaded message count: " +str(len(messages)))
+    for message in messages:
+        logging.info ('class: '+ str(message.__class__.__name__))
+        logging.info ('message: '+ str(message))
+        logging.info ('id: '+ str(message.id))
+        logging.info ('type: '+ str(message.type))
+        logging.info ('timestamp: '+ str(message.timestamp))
+        logging.info ('chat_id: '+ str(message.chat_id))
+        logging.info ('sender: '+ str(message.sender))
+        logging.info ('sender.id: '+ str(message.sender.id))
+        logging.info ('sender.safe_name: '+ str(message.sender.get_safe_name()))
+        
+        with db_conn.cursor() as cur:
+            cur.execute(check_if_processed, (str(message.id), ))
+            result_set=cur.fetchone()
 
+        if result_set is None: 
+            if message.type == 'chat':
+                logging.info ('-- Chat')
+                logging.info ('safe_content: '+ str(message.safe_content))
+                logging.info ('content: '+ str(message.content))
+                with db_conn.cursor() as cur:
+                    cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
+                    message_id = cur.fetchone()[0]
+                    cur.execute(insert_to_chats, (str(message.content), int(message_id)))
+                    chat_id = cur.fetchone()[0]
+                    db_conn.commit()
+
+            elif message.type == 'image' or message.type == 'video' :
+                logging.info ('-- Image or Video')
+                logging.info ('filename: '+ str(message.filename))
+                logging.info ('size: '+ str(message.size))
+                logging.info ('mime: '+ str(message.mime))
+                logging.info ('caption: '+ str(message.caption))
+                logging.info ('media_key: '+ str(message.media_key))
+                logging.info ('client_url: '+ str(message.client_url))
+
+                file_split=os.path.splitext(str(message.filename))
+                new_file_name=file_split[0]+f"_{iden_number}"+file_split[1]
+                try:
+                    downloaded_file=func_timeout(5, message.save_media, args=(dirName, True))
+                    os.rename(downloaded_file, os.path.join(dirName, new_file_name))
+                    logging.info(f"Photo downloaded to {dirName} folder")
+                    status='downloaded'
+                except (Exception, FunctionTimedOut) as ex:
+                    logging.exception("Cannot download photo, skipping")
+                    status='skipped'
+                    
+                with db_conn.cursor() as cur:
+                    cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
+                    message_id = cur.fetchone()[0]
+                    cur.execute(insert_to_downloads, (new_file_name, status, None, int(message_id), int(message.size), str(message.mime), str(message.caption), str(message.media_key)))
+                    download_id = cur.fetchone()[0]
+                    db_conn.commit()
+            else:
+                logging.info ('-- Other')
+        else:
+            process_time = result_set[0]
+            logging.info("Already processed on "+str(process_time))
+
+
+def create_directory(sender_msisdn):
+    # Creating directory tree
+    dirName=os.path.join("/wphotos", sender_msisdn)
+    if not os.path.exists(dirName):
+        # exist_ok=True, because of paralel execution in another container, to avoid race condition 
+        os.makedirs(dirName, exist_ok=True)
+        logging.info("Directory set " + dirName +  " was created ")
+    else:
+        logging.info("Directory set " + dirName + " already exists")
+
+# Main
 logging.basicConfig(level=logging.INFO)
 
 logging.info ("Environment", os.environ)
@@ -131,79 +205,3 @@ finally:
     if 'db_conn' in locals() and db_conn is not None:
         db_conn.close()
         logging.info('Database connection closed')
-
-
-
-def process_messages(messages):
-    logging.info("Loaded message count: " +str(len(messages)))
-    for message in messages:
-        logging.info ('class: '+ str(message.__class__.__name__))
-        logging.info ('message: '+ str(message))
-        logging.info ('id: '+ str(message.id))
-        logging.info ('type: '+ str(message.type))
-        logging.info ('timestamp: '+ str(message.timestamp))
-        logging.info ('chat_id: '+ str(message.chat_id))
-        logging.info ('sender: '+ str(message.sender))
-        logging.info ('sender.id: '+ str(message.sender.id))
-        logging.info ('sender.safe_name: '+ str(message.sender.get_safe_name()))
-        
-        with db_conn.cursor() as cur:
-            cur.execute(check_if_processed, (str(message.id), ))
-            result_set=cur.fetchone()
-
-        if result_set is None: 
-            if message.type == 'chat':
-                logging.info ('-- Chat')
-                logging.info ('safe_content: '+ str(message.safe_content))
-                logging.info ('content: '+ str(message.content))
-                with db_conn.cursor() as cur:
-                    cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
-                    message_id = cur.fetchone()[0]
-                    cur.execute(insert_to_chats, (str(message.content), int(message_id)))
-                    chat_id = cur.fetchone()[0]
-                    db_conn.commit()
-
-            elif message.type == 'image' or message.type == 'video' :
-                logging.info ('-- Image or Video')
-                logging.info ('filename: '+ str(message.filename))
-                logging.info ('size: '+ str(message.size))
-                logging.info ('mime: '+ str(message.mime))
-                logging.info ('caption: '+ str(message.caption))
-                logging.info ('media_key: '+ str(message.media_key))
-                logging.info ('client_url: '+ str(message.client_url))
-
-                file_split=os.path.splitext(str(message.filename))
-                new_file_name=file_split[0]+f"_{iden_number}"+file_split[1]
-                try:
-                    downloaded_file=func_timeout(5, message.save_media, args=(dirName, True))
-                    os.rename(downloaded_file, os.path.join(dirName, new_file_name))
-                    logging.info(f"Photo downloaded to {dirName} folder")
-                    status='downloaded'
-                except (Exception, FunctionTimedOut) as ex:
-                    logging.exception("Cannot download photo, skipping")
-                    status='skipped'
-                    
-                with db_conn.cursor() as cur:
-                    cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
-                    message_id = cur.fetchone()[0]
-                    cur.execute(insert_to_downloads, (new_file_name, status, None, int(message_id), int(message.size), str(message.mime), str(message.caption), str(message.media_key)))
-                    download_id = cur.fetchone()[0]
-                    db_conn.commit()
-            else:
-                logging.info ('-- Other')
-        else:
-            process_time = result_set[0]
-            logging.info("Already processed on "+str(process_time))
-    return True
-
-
-def create_directory(sender_msisdn):
-    # Creating directory tree
-    dirName=os.path.join("/wphotos", sender_msisdn)
-    if not os.path.exists(dirName):
-        # exist_ok=True, because of paralel execution in another container, to avoid race condition 
-        os.makedirs(dirName, exist_ok=True)
-        logging.info("Directory set " + dirName +  " was created ")
-    else:
-        logging.info("Directory set " + dirName + " already exists")
-    return True
