@@ -72,8 +72,19 @@ try:
         time.sleep(3)
         logging.info('Checking for more messages, status, '+ driver.get_status())
         for contact in driver.get_unread(use_unread_count=True, fetch_all_as_unread=True):
+
             logging.info(contact.chat)
             sender_msisdn=str(contact.chat.id).split('@')[0]
+
+            # Creating directory tree
+            dirName=os.path.join("/wphotos", sender_msisdn)
+            if not os.path.exists(dirName):
+                # exist_ok=True, because of paralel execution in another container, to avoid race condition 
+                os.makedirs(dirName, exist_ok=True)
+                logging.info("Directory set " + dirName +  " was created ")
+            else:
+                logging.info("Directory set " + dirName + " already exists")
+
             with db_conn.cursor() as cur:
                 cur.execute(loaded_contacts, (str(mobile_number), sender_msisdn, ))
                 earlier_messages_set=cur.fetchone()
@@ -134,14 +145,7 @@ try:
                         logging.info ('media_key: '+ str(message.media_key))
                         logging.info ('client_url: '+ str(message.client_url))
 
-                        # Creating directory tree
-                        dirName=os.path.join("/wphotos", message.chat_id['user'][:12])
-                        if not os.path.exists(dirName):
-                             # exist_ok=True, because of paralel execution in another container, to avoid race condition 
-                             os.makedirs(dirName, exist_ok=True)
-                             logging.info("Directory set " + dirName +  " was created ")
-                        else:
-                             logging.info("Directory set " + dirName + " already exists")
+                        
                         
                         file_split=os.path.splitext(str(message.filename))
                         new_file_name=file_split[0]+f"_{iden_number}"+file_split[1]
