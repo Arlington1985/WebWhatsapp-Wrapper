@@ -149,12 +149,12 @@ try:
         logging.info('Checking for more messages, status, '+ driver.get_status())
         
         # Define reloaded contacts and process them
-        logging.info("Getting reload contacts")
+        logging.debug("Getting reload contacts")
         with db_conn.cursor() as cur:
             cur.execute(reloaded_contacts, (str(mobile_number), ))
             reloaded_contacts_set=cur.fetchone()
         if reloaded_contacts_set is not None:
-            logging.info("The contacts will be reloaded: "+reloaded_contacts_set)
+            logging.info("The contacts will be reloaded: "+','.join(reloaded_contacts_set) )
             for chat in driver.get_all_chats():
                 sender_msisdn=str(chat.id).split('@')[0]
                 if sender_msisdn in reloaded_contacts_set:
@@ -178,7 +178,7 @@ try:
 
 
         # Read unread messages
-        logging.info("Getting unread messages")
+        logging.debug("Getting unread messages")
         for contact in driver.get_unread(use_unread_count=True, fetch_all_as_unread=True):
             logging.info(contact.chat)
             sender_msisdn=str(contact.chat.id).split('@')[0]
