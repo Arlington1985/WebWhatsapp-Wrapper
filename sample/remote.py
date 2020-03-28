@@ -194,6 +194,7 @@ def process_messages(messages):
         else:
             process_time = result_set[0]
             logging.info("Already processed on "+str(process_time))
+    return True
 
 
 def create_directory(sender_msisdn):
@@ -205,3 +206,4 @@ def create_directory(sender_msisdn):
         logging.info("Directory set " + dirName +  " was created ")
     else:
         logging.info("Directory set " + dirName + " already exists")
+    return True
