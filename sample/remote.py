@@ -66,12 +66,26 @@ try:
     check_if_processed = """SELECT MAX(a.datetime) latest_process_time FROM (SELECT d.status, d.datetime FROM whatsapp.messages m, whatsapp.downloads d WHERE m.id=d.message_id AND m.origin_id=%s) a GROUP BY a.status HAVING status!='skipped' ORDER BY latest_process_time DESC LIMIT 1;"""
 
     loaded_contacts = """SELECT receiver_msisdn, sender_msisdn, earlier_messages FROM whatsapp.load_earlier_messages WHERE receiver_msisdn=%s AND sender_msisdn=%s AND earlier_messages=True;"""
-    
+    reloaded_contacts = """SELECT sender_msisdn FROM whatsapp.load_earlier_messages WHERE receiver_msisdn=%s AND earlier_messages=True;"""
+
 
     while True:
         time.sleep(3)
         logging.info('Checking for more messages, status, '+ driver.get_status())
-        for contact in driver.get_unread(use_unread_count=True, fetch_all_as_unread=True):
+        merged_contacts=driver.get_unread(use_unread_count=True, fetch_all_as_unread=True)
+
+
+        # Define reloaded contacts and add to merged contacts
+        with db_conn.cursor() as cur:
+            cur.execute(reloaded_contacts, (str(mobile_number), ))
+            reloaded_contacts_set=cur.fetchone()
+        for contact in driver.get_all_chats():
+            sender_msisdn=str(contact.chat.id).split('@')[0]
+            print(sender_msisdn)
+            if sender_msisdn in reloaded_contacts_set:
+                merged_contacts.update(contact) 
+
+        for contact in merged_contacts:
 
             logging.info(contact.chat)
             sender_msisdn=str(contact.chat.id).split('@')[0]
@@ -246,6 +260,7 @@ try:
 
             contact.chat.send_seen()
             logging.info("Sent seen request")
+            
 except Exception as e:
     logging.exception(e)
     if 'driver' in locals() and driver is not None:
