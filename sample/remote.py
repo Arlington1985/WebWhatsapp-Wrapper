@@ -99,18 +99,11 @@ try:
             else:
                 logging.info("Directory set " + dirName + " already exists")
 
-            with db_conn.cursor() as cur:
-                cur.execute(loaded_contacts, (str(mobile_number), sender_msisdn, ))
-                earlier_messages_set=cur.fetchone()
 
-            if earlier_messages_set is not None:
-                logging.info("Earlier messages loading set to True for : " +sender_msisdn)
-                
-
-            if earlier_messages_set is not None: ##or contact.chat.get_js_obj()['unreadCount']==-1:
+            if sender_msisdn in reloaded_contacts_set:
+                logging.info("Loading earlier messages for: " +sender_msisdn+"...")
                 # Load all earlier messages
                 if contact.chat.are_all_messages_loaded()==False:
-                    logging.info("Loading earlier messages for: " +sender_msisdn+"...")
                     contact.chat.load_all_earlier_messages()
                     logging.info("Earlier messages loaded for: " +sender_msisdn)
                 else:
