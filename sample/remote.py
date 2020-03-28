@@ -9,7 +9,7 @@ from func_timeout import func_timeout, FunctionTimedOut
 
 
 # Procedures
-def process_messages(messages):
+def process_messages(messages, dirName):
     logging.info("Loaded message count: " +str(len(messages)))
     for message in messages:
         logging.info ('class: '+ str(message.__class__.__name__))
@@ -80,6 +80,7 @@ def create_directory(sender_msisdn):
         logging.info("Directory set " + dirName +  " was created ")
     else:
         logging.info("Directory set " + dirName + " already exists")
+    return dirName    
 
 # Main
 logging.basicConfig(level=logging.INFO)
@@ -157,7 +158,7 @@ try:
             for chat in driver.get_all_chats():
                 sender_msisdn=str(chat.id).split('@')[0]
                 if sender_msisdn in reloaded_contacts_set:
-                    create_directory(sender_msisdn)
+                    dirName=create_directory(sender_msisdn)
 
                     # Load all earlier messages
                     logging.info("Loading earlier messages for: " +sender_msisdn+"...")
@@ -169,7 +170,7 @@ try:
                     
                     # Get loaded messages
                     messages=chat.get_messages()
-                    process_messages(messages)
+                    process_messages(messages,dirName)
                     chat.send_seen()
                     logging.info("Sent seen request")
         else:
@@ -181,9 +182,9 @@ try:
         for contact in driver.get_unread(use_unread_count=True, fetch_all_as_unread=True):
             logging.info(contact.chat)
             sender_msisdn=str(contact.chat.id).split('@')[0]
-            create_directory(sender_msisdn)
+            dirName=create_directory(sender_msisdn)
             logging.info("Messages will be processed for "+sender_msisdn)
-            process_messages(contact.messages)
+            process_messages(contact.messages,dirName)
             contact.chat.send_seen()
             logging.info("Sent seen request")
 
