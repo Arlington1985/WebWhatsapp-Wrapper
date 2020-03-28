@@ -175,6 +175,7 @@ try:
                     logging.info("Sent seen request")
                     with db_conn.cursor() as cur:
                         cur.execute(deactivate_reload, (str(mobile_number), str(sender_msisdn)))
+                        db_conn.commit()                    
                         logging.info("Reloading deactivated for "+str(sender_msisdn))
 
         else:
