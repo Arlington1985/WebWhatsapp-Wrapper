@@ -78,7 +78,6 @@ try:
                 cur.execute(loaded_contacts, (str(mobile_number), sender_msisdn, ))
                 earlier_messages_set=cur.fetchone()
 
-            print(str(contact.chat))
             if earlier_messages_set is not None:
                 logging.info("Earlier messages loading set to True for : " +sender_msisdn)
                 
@@ -87,7 +86,7 @@ try:
                 # Load all earlier messages
                 if contact.chat.are_all_messages_loaded()==False:
                     logging.info("Loading earlier messages for: " +sender_msisdn+"...")
-                    contact.chat.load_earlier_messages()
+                    contact.chat.load_all_earlier_messages()
                     logging.info("Earlier messages loaded for: " +sender_msisdn)
                 else:
                     logging.info("All messages already loaded for: " +sender_msisdn)
