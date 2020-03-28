@@ -83,7 +83,7 @@ try:
                 logging.info("Earlier messages loading set to True for : " +str(contact.chat.user))
                 
 
-            if earlier_messages_set is not None or contact.chat.get_js_obj()['unreadCount']==-1:
+            if earlier_messages_set is not None: ##or contact.chat.get_js_obj()['unreadCount']==-1:
                 # Load all earlier messages
                 if contact.chat.are_all_messages_loaded()==False:
                     logging.info("Loading earlier messages for: " +str(contact.chat.id)+"...")
