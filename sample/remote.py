@@ -75,8 +75,12 @@ try:
             logging.info(contact)
 
             with db_conn.cursor() as cur:
-                cur.execute(loaded_contacts, (mobile_number, str(contact.chat.id), ))
+                cur.execute(loaded_contacts, (str(mobile_number), str(contact.chat.id), ))
                 earlier_messages_set=cur.fetchone()
+
+            if earlier_messages_set is not None:
+                logging.info("Earlier messages loading set to True for : " +str(contact.chat.id))
+                
 
             if earlier_messages_set is not None or contact.chat.get_js_obj()['unreadCount']==-1:
                 # Load all earlier messages
