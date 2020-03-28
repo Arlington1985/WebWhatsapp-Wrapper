@@ -78,9 +78,9 @@ try:
                 cur.execute(loaded_contacts, (str(mobile_number), str(contact.chat.id), ))
                 earlier_messages_set=cur.fetchone()
 
-            print(str(contact.chat.id))
+            print(str(contact.chat.user))
             if earlier_messages_set is not None:
-                logging.info("Earlier messages loading set to True for : " +str(contact.chat.id))
+                logging.info("Earlier messages loading set to True for : " +str(contact.chat.user))
                 
 
             if earlier_messages_set is not None or contact.chat.get_js_obj()['unreadCount']==-1:
