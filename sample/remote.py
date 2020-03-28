@@ -140,8 +140,8 @@ try:
 
     check_if_processed = """SELECT MAX(a.datetime) latest_process_time FROM (SELECT d.status, d.datetime FROM whatsapp.messages m, whatsapp.downloads d WHERE m.id=d.message_id AND m.origin_id=%s) a GROUP BY a.status HAVING status!='skipped' ORDER BY latest_process_time DESC LIMIT 1;"""
 
-    loaded_contacts = """SELECT receiver_msisdn, sender_msisdn, earlier_messages FROM whatsapp.load_earlier_messages WHERE receiver_msisdn=%s AND sender_msisdn=%s AND earlier_messages=True;"""
     reloaded_contacts = """SELECT sender_msisdn FROM whatsapp.load_earlier_messages WHERE receiver_msisdn=%s AND earlier_messages=True;"""
+    deactivate_reload = """UPDATE whatsapp.load_earlier_messages SET earlier_messages=False reload_end=LOCALTIMESTAMP WHERE receiver_msisdn=%s AND sender_msisdn=%s and earlier_messages=True;"""
 
 
     while True:
@@ -173,6 +173,10 @@ try:
                     process_messages(messages,dirName)
                     chat.send_seen()
                     logging.info("Sent seen request")
+                    with db_conn.cursor() as cur:
+                        cur.execute(deactivate_reload, (str(mobile_number), str(sender_msisdn)))
+                        logging.info("Reloading deactivated for "+str(sender_msisdn))
+
         else:
             logging.info("Nothing to reload, continue")
 
