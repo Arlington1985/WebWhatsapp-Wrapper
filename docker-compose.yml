@@ -23,6 +23,7 @@ services:
      environment:
        - SELENIUM=http://firefox_994704414285:4444/wd/hub
        - MOBILE_NUMBER=994704414285
+       - IDEN_NUMBER=5
        - DATABASE_URL
      volumes:
        - ".:/app"
@@ -60,6 +61,7 @@ services:
      environment:
        - SELENIUM=http://firefox_994704414286:4444/wd/hub
        - MOBILE_NUMBER=994704414286
+       - IDEN_NUMBER=6
        - DATABASE_URL       
      volumes:
        - ".:/app"
@@ -96,6 +98,7 @@ services:
      environment:
        - SELENIUM=http://firefox_994704414287:4444/wd/hub
        - MOBILE_NUMBER=994704414287
+       - IDEN_NUMBER=7
        - DATABASE_URL
      volumes:
        - ".:/app"
@@ -132,6 +135,7 @@ services:
      environment:
        - SELENIUM=http://firefox_994704414288:4444/wd/hub
        - MOBILE_NUMBER=994704414288
+       - IDEN_NUMBER=8
        - DATABASE_URL
      volumes:
        - ".:/app"
@@ -167,6 +171,7 @@ services:
      environment:
        - SELENIUM=http://firefox_994708394417:4444/wd/hub
        - MOBILE_NUMBER=994708394417
+       - IDEN_NUMBER=9
        - DATABASE_URL
      volumes:
        - ".:/app"

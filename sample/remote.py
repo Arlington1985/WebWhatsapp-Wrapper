@@ -19,7 +19,7 @@ except KeyError:
 
 try:
    mobile_number = os.environ["MOBILE_NUMBER"]
-   last_mnumber = mobile_number[-1:]
+   iden_number = os.environ["IDEN_NUMBER"]
 except KeyError:
    logging.error("Please set the mobile number variable")
    sys.exit(1)
@@ -65,15 +65,20 @@ try:
 
     check_if_processed = """SELECT MAX(a.datetime) latest_process_time FROM (SELECT d.status, d.datetime FROM whatsapp.messages m, whatsapp.downloads d WHERE m.id=d.message_id AND m.origin_id=%s) a GROUP BY a.status HAVING status!='skipped' ORDER BY latest_process_time DESC LIMIT 1;"""
 
-    load_earlier_messages=False
+    loaded_contacts = """SELECT receiver_msisdn, sender_msisdn, earlier_messages FROM whatsapp.load_earlier_messages WHERE receiver_msisdn=%s AND sender_msisdn=%s AND earlier_messages=True;"""
+    
+
     while True:
         time.sleep(3)
         logging.info('Checking for more messages, status, '+ driver.get_status())
         for contact in driver.get_unread(use_unread_count=True, fetch_all_as_unread=True):
             logging.info(contact)
 
-            
-            if load_earlier_messages==True and contact.chat.get_js_obj()['unreadCount']==-1:
+            with db_conn.cursor() as cur:
+                cur.execute(loaded_contacts, (mobile_number, str(contact.chat.id), ))
+                earlier_messages_set=cur.fetchone()
+
+            if earlier_messages_set is not None or contact.chat.get_js_obj()['unreadCount']==-1:
                 # Load all earlier messages
                 if contact.chat.are_all_messages_loaded()==False:
                     logging.info("Loading earlier messages for: " +str(contact.chat.id)+"...")
@@ -135,7 +140,7 @@ try:
                              logging.info("Directory set " + dirName + " already exists")
                         
                         file_split=os.path.splitext(str(message.filename))
-                        new_file_name=file_split[0]+f"_{last_mnumber}"+file_split[1]
+                        new_file_name=file_split[0]+f"_{iden_number}"+file_split[1]
                         try:
                             downloaded_file=func_timeout(5, message.save_media, args=(dirName, True))
                             os.rename(downloaded_file, os.path.join(dirName, new_file_name))
@@ -204,7 +209,7 @@ try:
                         #         db_conn.commit()
                         #         cur.close()
                         #     else:
-                        #         os.rename(tmp_file, os.path.join(dirName, file_split[0]+f"_{last_mnumber}"+file_split[1]))
+                        #         os.rename(tmp_file, os.path.join(dirName, file_split[0]+f"_{iden_number}"+file_split[1]))
                         #         logging.info("Photo moved to permanent location")
                         #         cur = db_conn.cursor()
                         #         cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
@@ -214,7 +219,7 @@ try:
                         #         db_conn.commit()
                         #         cur.close()
                         # else:
-                        #     os.rename(tmp_file, os.path.join(dirName, file_split[0]+f"_{last_mnumber}"+file_split[1]))
+                        #     os.rename(tmp_file, os.path.join(dirName, file_split[0]+f"_{iden_number}"+file_split[1]))
                         #     logging.info("First download, photo moved to permanent location")
                         #     cur = db_conn.cursor()
                         #     cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
