@@ -73,24 +73,24 @@ try:
         logging.info('Checking for more messages, status, '+ driver.get_status())
         for contact in driver.get_unread(use_unread_count=True, fetch_all_as_unread=True):
             logging.info(contact.chat)
-
+            sender_msisdn=str(contact.chat.id).split('@')[0]
             with db_conn.cursor() as cur:
-                cur.execute(loaded_contacts, (str(mobile_number), str(contact.chat.user), ))
+                cur.execute(loaded_contacts, (str(mobile_number), sender_msisdn, ))
                 earlier_messages_set=cur.fetchone()
 
             print(str(contact.chat))
             if earlier_messages_set is not None:
-                logging.info("Earlier messages loading set to True for : " +str(contact.chat.user))
+                logging.info("Earlier messages loading set to True for : " +sender_msisdn)
                 
 
             if earlier_messages_set is not None: ##or contact.chat.get_js_obj()['unreadCount']==-1:
                 # Load all earlier messages
                 if contact.chat.are_all_messages_loaded()==False:
-                    logging.info("Loading earlier messages for: " +str(contact.chat.id)+"...")
+                    logging.info("Loading earlier messages for: " +sender_msisdn+"...")
                     contact.chat.load_earlier_messages()
-                    logging.info("Earlier messages loaded for: " +str(contact.chat.id))
+                    logging.info("Earlier messages loaded for: " +sender_msisdn)
                 else:
-                    logging.info("All messages already loaded for: " +str(contact.chat.id))
+                    logging.info("All messages already loaded for: " +sender_msisdn)
                 
                 # Get loaded messages
                 messages=contact.chat.get_messages()
