@@ -72,10 +72,10 @@ try:
         time.sleep(3)
         logging.info('Checking for more messages, status, '+ driver.get_status())
         for contact in driver.get_unread(use_unread_count=True, fetch_all_as_unread=True):
-            logging.info(contact)
+            logging.info(contact.chat)
 
             with db_conn.cursor() as cur:
-                cur.execute(loaded_contacts, (str(mobile_number), str(contact.chat.id), ))
+                cur.execute(loaded_contacts, (str(mobile_number), str(contact.chat.user), ))
                 earlier_messages_set=cur.fetchone()
 
             print(str(contact.chat))
