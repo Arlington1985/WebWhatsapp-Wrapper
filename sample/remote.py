@@ -178,7 +178,7 @@ try:
                         logging.info("Reloading deactivated for "+str(sender_msisdn))
 
         else:
-            logging.info("Nothing to reload, continue")
+            logging.debug("Nothing to reload, continue")
 
 
         # Read unread messages
