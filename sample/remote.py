@@ -130,13 +130,13 @@ try:
     )
     logging.info('Connected to database')
     insert_to_downloads = """INSERT INTO whatsapp.downloads(filename, datetime, status, description, message_id, size, mime, caption, media_key)
-             VALUES(%s, LOCALTIMESTAMP, %s, %s, %s, %s, %s, %s, %s ) RETURNING id;"""
+             VALUES(%s, CURRENT_TIMESTAMP, %s, %s, %s, %s, %s, %s, %s ) RETURNING id;"""
     
     insert_to_chats = """INSERT INTO whatsapp.chats(datetime, message, message_id)
-             VALUES(LOCALTIMESTAMP, %s, %s ) RETURNING id;"""
+             VALUES(CURRENT_TIMESTAMP, %s, %s ) RETURNING id;"""
 
     insert_to_messages = """INSERT INTO whatsapp.messages(origin_id, message_type, message_timestamp, sender_msisdn, sender_name, datetime, receiver_msisdn)
-             VALUES(%s, %s, %s, %s, %s, LOCALTIMESTAMP, %s ) RETURNING id;"""
+             VALUES(%s, %s, %s, %s, %s, CURRENT_TIMESTAMP, %s ) RETURNING id;"""
 
     check_if_processed = """SELECT MAX(a.datetime) latest_process_time FROM (SELECT d.status, d.datetime FROM whatsapp.messages m, whatsapp.downloads d WHERE m.id=d.message_id AND m.origin_id=%s) a GROUP BY a.status HAVING status!='skipped' ORDER BY latest_process_time DESC LIMIT 1;"""
 
