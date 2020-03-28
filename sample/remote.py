@@ -75,7 +75,7 @@ try:
             logging.info(contact)
 
             with db_conn.cursor() as cur:
-                cur.execute(loaded_contacts, (str(mobile_number), str(contact.chat.id)))
+                cur.execute(loaded_contacts, (str(mobile_number), str(contact.chat.id), ))
                 earlier_messages_set=cur.fetchone()
 
             print(str(contact.chat.id))
@@ -111,7 +111,7 @@ try:
                 logging.info ('sender.safe_name: '+ str(message.sender.get_safe_name()))
                 
                 with db_conn.cursor() as cur:
-                    cur.execute(check_if_processed, (str(message.id)))
+                    cur.execute(check_if_processed, (str(message.id), ))
                     result_set=cur.fetchone()
 
                 if result_set is None: 
