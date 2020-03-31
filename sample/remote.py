@@ -174,7 +174,7 @@ try:
                     
                     # Get loaded messages
                     messages=chat.get_messages()
-                    reverse_messages = sorted(messages, key=itemgetter('timestamp'), reverse=True) 
+                    reverse_messages = sorted(messages, key=lambda x: x.timestamp, reverse=True) 
                     process_messages(reverse_messages,dirName)
                     chat.send_seen()
                     logging.info("Sent seen request")
