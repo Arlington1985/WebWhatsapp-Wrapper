@@ -52,15 +52,19 @@ def process_messages(messages, dirName):
                 file_split=os.path.splitext(str(message.filename))
                 new_file_name=file_split[0]+f"_{iden_number}"+file_split[1]
                 try:
-                    downloaded_file=func_timeout(5, message.save_media, args=(dirName, True))
-                    os.rename(downloaded_file, os.path.join(dirName, new_file_name))
-                    logging.info(f"Photo downloaded to {dirName} folder")
-                    status='downloaded'
+                    if skip_count<=10:
+                        downloaded_file=func_timeout(5, message.save_media, args=(dirName, True))
+                        os.rename(downloaded_file, os.path.join(dirName, new_file_name))
+                        logging.info(f"Photo downloaded to {dirName} folder")
+                        status='downloaded'
+                        skip_count=0
+                    else:
+                        logging.info("Sonsecutive skipped photo count reached to the thershold 10, will not try to download any more from this sender")
+                        break
+
                 except (Exception, FunctionTimedOut) as ex:
                     logging.exception("Cannot download photo, skipping")      
                     status='skipped'
-                    if skip_count>10:
-                        raise("Skipped photo count reached to threshold 10, terminating the process")
                     
                 with db_conn.cursor() as cur:
                     cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
@@ -144,8 +148,8 @@ try:
 
     check_if_processed = """SELECT MAX(a.datetime) latest_process_time FROM (SELECT d.status, d.datetime FROM whatsapp.messages m, whatsapp.downloads d WHERE m.id=d.message_id AND m.origin_id=%s) a GROUP BY a.status HAVING status!='skipped' ORDER BY latest_process_time DESC LIMIT 1;"""
 
-    reloaded_contacts = """SELECT sender_msisdn FROM whatsapp.load_earlier_messages WHERE receiver_msisdn=%s AND earlier_messages=True;"""
-    deactivate_reload = """UPDATE whatsapp.load_earlier_messages SET earlier_messages=False, reload_end=NOW() WHERE receiver_msisdn=%s AND sender_msisdn=%s and earlier_messages=True;"""
+    reloaded_contacts = """SELECT id, sender_msisdn FROM whatsapp.load_earlier_messages WHERE receiver_msisdn=%s AND earlier_messages=True;"""
+    deactivate_reload = """UPDATE whatsapp.load_earlier_messages SET earlier_messages=False, reload_end=NOW() WHERE receiver_msisdn=%s AND sender_msisdn=%s AND earlier_messages=True AND reload_end is NULL;"""
 
 
     while True:
@@ -156,32 +160,43 @@ try:
         logging.debug("Getting reload contacts")
         with db_conn.cursor() as cur:
             cur.execute(reloaded_contacts, (str(mobile_number), ))
-            reloaded_contacts_set=cur.fetchone()
-        if reloaded_contacts_set is not None:
-            logging.info("The contacts will be reloaded: "+','.join(reloaded_contacts_set) )
-            for chat in driver.get_all_chats():
-                sender_msisdn=str(chat.id).split('@')[0]
-                if sender_msisdn in reloaded_contacts_set:
-                    dirName=create_directory(sender_msisdn)
+            reloaded_contacts_set=cur.fetchall()
+            sender_msisdn_list=[i[1] for i in reloaded_contacts_set]
 
-                    # Load all earlier messages
-                    logging.info("Loading earlier messages for: " +sender_msisdn+"...")
-                    if chat.are_all_messages_loaded()==False:
-                        chat.load_all_earlier_messages()
-                        logging.info("Earlier messages loaded for: " +sender_msisdn)
-                    else:
-                        logging.info("All messages already loaded for: " +sender_msisdn)
-                    
-                    # Get loaded messages
-                    messages=chat.get_messages()
-                    reverse_messages = sorted(messages, key=lambda x: x.timestamp, reverse=True) 
-                    process_messages(reverse_messages,dirName)
-                    chat.send_seen()
-                    logging.info("Sent seen request")
-                    with db_conn.cursor() as cur:
-                        cur.execute(deactivate_reload, (str(mobile_number), str(sender_msisdn)))
-                        db_conn.commit()                    
-                        logging.info("Reloading deactivated for "+str(sender_msisdn))
+        if reloaded_contacts_set is not None:
+            logging.info("The contacts will be reloaded: "+','.join(sender_msisdn_list) )
+            for reload_contact_row in reloaded_contacts_set:
+
+                reload_contact_row_id = reload_contact_row[0]
+                reload_contact_row_sender = reload_contact_row[1]
+
+                for chat in driver.get_all_chats():
+                    sender_msisdn=str(chat.id).split('@')[0]
+                    if sender_msisdn==reload_contact_row_sender:
+
+                        # Creating directory set for photos if not exists
+                        dirName=create_directory(sender_msisdn)
+
+                        # Load all earlier messages
+                        logging.info("Loading earlier messages for: " +sender_msisdn+"...")
+                        if chat.are_all_messages_loaded()==False:
+                            chat.load_all_earlier_messages()
+                            logging.info("Earlier messages loaded for: " +sender_msisdn)
+                        else:
+                            logging.info("All messages already loaded for: " +sender_msisdn)
+                        
+                        # Get loaded messages
+                        messages=chat.get_messages()
+                        reverse_messages = sorted(messages, key=lambda x: x.timestamp, reverse=True) 
+                        process_messages(reverse_messages,dirName)
+                        chat.send_seen()
+                        logging.info("Sent seen request")
+
+                # Deactivating reload
+                with db_conn.cursor() as cur:
+                    cur.execute(deactivate_reload, (reload_contact_row_id, ))
+                    db_conn.commit()                    
+                    logging.info("Reloading deactivated for "+str(sender_msisdn))
 
         else:
             logging.debug("Nothing to reload, continue")
