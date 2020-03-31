@@ -65,6 +65,7 @@ def process_messages(messages, dirName):
                 except (Exception, FunctionTimedOut) as ex:
                     logging.exception("Cannot download photo, skipping")      
                     status='skipped'
+                    skip_count=skip_count+1
                     
                 with db_conn.cursor() as cur:
                     cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
