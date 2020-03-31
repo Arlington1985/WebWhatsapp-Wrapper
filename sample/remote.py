@@ -6,11 +6,13 @@ from webwhatsapi.objects.message import Message, MediaMessage
 from urllib.parse import urlparse
 import psycopg2
 from func_timeout import func_timeout, FunctionTimedOut
+from operator import itemgetter
 
 
 # Procedures
 def process_messages(messages, dirName):
     logging.info("Loaded message count: " +str(len(messages)))
+    skip_count=0
     for message in messages:
         logging.info ('class: '+ str(message.__class__.__name__))
         logging.info ('message: '+ str(message))
@@ -55,8 +57,10 @@ def process_messages(messages, dirName):
                     logging.info(f"Photo downloaded to {dirName} folder")
                     status='downloaded'
                 except (Exception, FunctionTimedOut) as ex:
-                    logging.exception("Cannot download photo, skipping")
+                    logging.exception("Cannot download photo, skipping")      
                     status='skipped'
+                    if skip_count>10:
+                        raise("Skipped photo count reached to threshold 10, terminating the process")
                     
                 with db_conn.cursor() as cur:
                     cur.execute(insert_to_messages, (str(message.id), str(message.type), str(message.timestamp), str(message.chat_id['user'][:12]), str(message.sender.get_safe_name()), str(mobile_number)))
@@ -170,7 +174,8 @@ try:
                     
                     # Get loaded messages
                     messages=chat.get_messages()
-                    process_messages(messages,dirName)
+                    reverse_messages = sorted(messages, key=itemgetter('timestamp'), reverse=True) 
+                    process_messages(reverse_messages,dirName)
                     chat.send_seen()
                     logging.info("Sent seen request")
                     with db_conn.cursor() as cur:
