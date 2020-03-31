@@ -163,7 +163,7 @@ try:
             reloaded_contacts_set=cur.fetchall()
             sender_msisdn_list=[i[1] for i in reloaded_contacts_set]
 
-        if reloaded_contacts_set is not None:
+        if reloaded_contacts_set is not None and len(reloaded_contacts_set)>0:
             logging.info("The contacts will be reloaded: "+','.join(sender_msisdn_list) )
             for reload_contact_row in reloaded_contacts_set:
 
