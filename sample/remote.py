@@ -211,6 +211,7 @@ try:
                     cur.execute(deactivate_reload, (reload_contact_row_id, ))
                     db_conn.commit()                    
                 logging.info("Reloading deactivated for "+str(reload_contact_row_sender))
+                driver.close()
 
         else:
             logging.debug("Nothing to reload, continue")
