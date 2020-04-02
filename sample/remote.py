@@ -9,9 +9,6 @@ from func_timeout import func_timeout, FunctionTimedOut
 from operator import itemgetter
 
 
-class CustomError(Exception):
-    pass
-
 # Procedures
 def process_messages(messages, dirName):
     logging.info("Loaded message count: " +str(len(messages)))
@@ -179,32 +176,32 @@ try:
                     cur.execute(activate_reload, (reload_contact_row_id, ))
                     db_conn.commit()
 
-                for chat in driver.get_all_chats():
-                    sender_msisdn=str(chat.id).split('@')[0]
-                    if sender_msisdn==reload_contact_row_sender:
+        #for chat in driver.get_all_chats():
+        #    sender_msisdn=str(chat.id).split('@')[0]
+        #    if sender_msisdn==reload_contact_row_sender:
+                chat=driver.get_chat_from_phone_number(reload_contact_row_sender)
 
-                        # Creating directory set for photos if not exists
-                        dirName=create_directory(sender_msisdn)
+                # Creating directory set for photos if not exists
+                dirName=create_directory(sender_msisdn)
 
-                        # Load all earlier messages
-                        logging.info("Loading earlier messages for: " +sender_msisdn+"...")
-                        if chat.are_all_messages_loaded()==False:
-                            chat.load_all_earlier_messages()
-                            logging.info("Earlier messages loaded for: " +sender_msisdn)
-                        else:
-                            logging.info("All messages already loaded for: " +sender_msisdn)
-                        
-                        # Get loaded messages
-                        messages=chat.get_messages()
-                        reverse_messages = sorted(messages, key=lambda x: x.timestamp, reverse=True) 
-                        process_messages(reverse_messages,dirName)
+                # Load all earlier messages
+                logging.info("Loading earlier messages for: " +sender_msisdn+"...")
+                if chat.are_all_messages_loaded()==False:
+                    chat.load_all_earlier_messages()
+                    logging.info("Earlier messages loaded for: " +sender_msisdn)
+                else:
+                    logging.info("All messages already loaded for: " +sender_msisdn)
+                
+                # Get loaded messages
+                messages=chat.get_messages()
+                reverse_messages = sorted(messages, key=lambda x: x.timestamp, reverse=True) 
+                process_messages(reverse_messages,dirName)
 
                 # Deactivating reload
                 with db_conn.cursor() as cur:
                     cur.execute(deactivate_reload, (reload_contact_row_id, ))
                     db_conn.commit()                    
                     logging.info("Reloading deactivated for "+str(reload_contact_row_sender))
-                    raise CustomError
 
         else:
             logging.debug("Nothing to reload, continue")
