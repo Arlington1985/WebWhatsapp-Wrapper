@@ -9,6 +9,9 @@ from func_timeout import func_timeout, FunctionTimedOut
 from operator import itemgetter
 
 
+class CustomError(Exception):
+    pass
+
 # Procedures
 def process_messages(messages, dirName):
     logging.info("Loaded message count: " +str(len(messages)))
@@ -201,7 +204,7 @@ try:
                     cur.execute(deactivate_reload, (reload_contact_row_id, ))
                     db_conn.commit()                    
                     logging.info("Reloading deactivated for "+str(reload_contact_row_sender))
-                    raise
+                    raise CustomError
 
         else:
             logging.debug("Nothing to reload, continue")
