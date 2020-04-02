@@ -182,15 +182,15 @@ try:
                 chat=driver.get_chat_from_phone_number(reload_contact_row_sender)
 
                 # Creating directory set for photos if not exists
-                dirName=create_directory(sender_msisdn)
+                dirName=create_directory(reload_contact_row_sender)
 
                 # Load all earlier messages
-                logging.info("Loading earlier messages for: " +sender_msisdn+"...")
+                logging.info("Loading earlier messages for: " +reload_contact_row_sender+"...")
                 if chat.are_all_messages_loaded()==False:
                     chat.load_all_earlier_messages()
-                    logging.info("Earlier messages loaded for: " +sender_msisdn)
+                    logging.info("Earlier messages loaded for: " +reload_contact_row_sender)
                 else:
-                    logging.info("All messages already loaded for: " +sender_msisdn)
+                    logging.info("All messages already loaded for: " +reload_contact_row_sender)
                 
                 # Get loaded messages
                 messages=chat.get_messages()
