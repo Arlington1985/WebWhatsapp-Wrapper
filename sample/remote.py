@@ -210,7 +210,7 @@ try:
                 with db_conn.cursor() as cur:
                     cur.execute(deactivate_reload, (reload_contact_row_id, ))
                     db_conn.commit()                    
-                    logging.info("Reloading deactivated for "+str(reload_contact_row_sender))
+                logging.info("Reloading deactivated for "+str(reload_contact_row_sender))
 
         else:
             logging.debug("Nothing to reload, continue")
