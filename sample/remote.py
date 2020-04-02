@@ -158,6 +158,18 @@ try:
         time.sleep(3)
         logging.info('Checking for more messages, status, '+ driver.get_status())
         
+        # Read unread messages
+        logging.debug("Getting unread messages")
+        for contact in driver.get_unread(use_unread_count=True, fetch_all_as_unread=True):
+            logging.info(contact.chat)
+            sender_msisdn=str(contact.chat.id).split('@')[0]
+            dirName=create_directory(sender_msisdn)
+            logging.info("Messages will be processed for "+sender_msisdn)
+            process_messages(contact.messages,dirName)
+            contact.chat.send_seen()
+            logging.info("Sent seen request")
+
+
         # Define reloaded contacts and process them
         logging.debug("Getting reload contacts")
         with db_conn.cursor() as cur:
@@ -176,9 +188,6 @@ try:
                     cur.execute(activate_reload, (reload_contact_row_id, ))
                     db_conn.commit()
 
-        #for chat in driver.get_all_chats():
-        #    sender_msisdn=str(chat.id).split('@')[0]
-        #    if sender_msisdn==reload_contact_row_sender:
                 chat=driver.get_chat_from_phone_number(reload_contact_row_sender)
 
                 # Creating directory set for photos if not exists
@@ -205,19 +214,6 @@ try:
 
         else:
             logging.debug("Nothing to reload, continue")
-
-
-        # Read unread messages
-        logging.debug("Getting unread messages")
-        for contact in driver.get_unread(use_unread_count=True, fetch_all_as_unread=True):
-            logging.info(contact.chat)
-            sender_msisdn=str(contact.chat.id).split('@')[0]
-            dirName=create_directory(sender_msisdn)
-            logging.info("Messages will be processed for "+sender_msisdn)
-            process_messages(contact.messages,dirName)
-            contact.chat.send_seen()
-            logging.info("Sent seen request")
-
 
             
 except Exception as e:
