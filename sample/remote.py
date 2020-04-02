@@ -175,7 +175,7 @@ try:
                 with db_conn.cursor() as cur:
                     cur.execute(activate_reload, (reload_contact_row_id, ))
                     db_conn.commit()
-                    
+
                 for chat in driver.get_all_chats():
                     sender_msisdn=str(chat.id).split('@')[0]
                     if sender_msisdn==reload_contact_row_sender:
@@ -201,6 +201,7 @@ try:
                     cur.execute(deactivate_reload, (reload_contact_row_id, ))
                     db_conn.commit()                    
                     logging.info("Reloading deactivated for "+str(reload_contact_row_sender))
+                    raise
 
         else:
             logging.debug("Nothing to reload, continue")
