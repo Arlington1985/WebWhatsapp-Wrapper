@@ -1,7 +1,7 @@
 # Libraies
 import os, sys, time, json, filecmp, logging
 from datetime import datetime, timedelta
-from webwhatsapi import WhatsAPIDriver
+from webwhatsapi import ChatNotFoundError, WhatsAPIDriver
 from webwhatsapi.objects.message import Message, MediaMessage
 from urllib.parse import urlparse
 import psycopg2
@@ -151,7 +151,7 @@ try:
 
     reloaded_contacts = """SELECT id, sender_msisdn FROM whatsapp.load_earlier_messages WHERE receiver_msisdn=%s AND earlier_messages=True;"""
     activate_reload  = """UPDATE whatsapp.load_earlier_messages SET reload_start=NOW() WHERE id=%s;"""
-    deactivate_reload = """UPDATE whatsapp.load_earlier_messages SET earlier_messages=False, reload_end=NOW() WHERE id=%s;"""
+    deactivate_reload = """UPDATE whatsapp.load_earlier_messages SET earlier_messages=False, reload_end=NOW(), set=%s WHERE id=%s;"""
     
 
     while True:
@@ -188,32 +188,37 @@ try:
                     cur.execute(activate_reload, (reload_contact_row_id, ))
                     db_conn.commit()
 
-                chat=driver.get_chat_from_phone_number(reload_contact_row_sender)
+                try:
+                    chat=driver.get_chat_from_phone_number(reload_contact_row_sender)
 
-                # Creating directory set for photos if not exists
-                dirName=create_directory(reload_contact_row_sender)
+                    # Creating directory set for photos if not exists
+                    dirName=create_directory(reload_contact_row_sender)
 
-                # Load all earlier messages
-                logging.info("Loading earlier messages for: " +reload_contact_row_sender+"...")
-                if chat.are_all_messages_loaded()==False:
-                    chat.load_all_earlier_messages()
-                    logging.info("Earlier messages loaded for: " +reload_contact_row_sender)
-                else:
-                    logging.info("All messages already loaded for: " +reload_contact_row_sender)
+                    # Load all earlier messages
+                    logging.info("Loading earlier messages for: " +reload_contact_row_sender+"...")
+                    if chat.are_all_messages_loaded()==False:
+                        chat.load_all_earlier_messages()
+                        logging.info("Earlier messages loaded for: " +reload_contact_row_sender)
+                    else:
+                        logging.info("All messages already loaded for: " +reload_contact_row_sender)
+                    
+                    # Get loaded messages
+                    messages=chat.get_messages()
+                    reverse_messages = sorted(messages, key=lambda x: x.timestamp, reverse=True) 
+                    process_messages(reverse_messages,dirName)
+                    process_note=f"{str(len(messages))} messages reloaded for {reload_contact_row_sender}"
+                except ChatNotFoundError as err:
+                    process_note=str(err)
+                finally:
+                    # Deactivating reload
+                    with db_conn.cursor() as cur:
+                        cur.execute(deactivate_reload, (process_note, reload_contact_row_id, ))
+                        db_conn.commit()                    
+                    logging.info("Reloading deactivated for "+str(reload_contact_row_sender))
+                    chat.send_seen()
+                    
                 
-                # Get loaded messages
-                messages=chat.get_messages()
-                reverse_messages = sorted(messages, key=lambda x: x.timestamp, reverse=True) 
-                process_messages(reverse_messages,dirName)
-
-                # Deactivating reload
-                with db_conn.cursor() as cur:
-                    cur.execute(deactivate_reload, (reload_contact_row_id, ))
-                    db_conn.commit()                    
-                logging.info("Reloading deactivated for "+str(reload_contact_row_sender))
-                chat.send_seen()
-
-
+                
         else:
             logging.debug("Nothing to reload, continue")
 
