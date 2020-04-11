@@ -1,6 +1,5 @@
 # Deploying applications
-version: "3"
-
+version: "3.7"
 services:
 
    # 1st mobile number
@@ -15,31 +14,46 @@ services:
     networks:
       - selenium
     restart: on-failure
-
-  whatsapp_994704414285:
-     container_name: whatsapp_994704414285
-     image: webwhatsapp-wrapper
-     build: .
-     environment:
-       - SELENIUM=http://firefox_994704414285:4444/wd/hub
-       - MOBILE_NUMBER=994704414285
-       - IDEN_NUMBER=5
-       - DATABASE_URL
-     volumes:
-       - ".:/app"
-       - "/media/wphotos:/wphotos"
-     command: /app/docker-entrypoint.sh
-     networks:
-       - selenium
-     depends_on:
-       - firefox_994704414285
-     restart: on-failure
-     logging:
-       driver: syslog
+    logging:
+       driver: journald
        options: 
          tag: "{{.Name}}/{{.ID}}"
-       
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
+        reservations:
+          memory: 500M
 
+  whatsapp_994704414285:
+    container_name: whatsapp_994704414285
+    image: webwhatsapp-wrapper
+    build: .
+    environment:
+      - SELENIUM=http://firefox_994704414285:4444/wd/hub
+      - MOBILE_NUMBER=994704414285
+      - IDEN_NUMBER=5
+      - DATABASE_URL
+    volumes:
+      - ".:/app"
+      - "/media/wphotos:/wphotos"
+    command: /app/docker-entrypoint.sh
+    networks:
+      - selenium
+    depends_on:
+      - firefox_994704414285
+    restart: on-failure
+    logging:
+      driver: journald
+      options: 
+        tag: "{{.Name}}/{{.ID}}"
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
+        reservations:
+          memory: 500M 
+       
 
   # 2nd mobile number
   firefox_994704414286:
@@ -53,29 +67,45 @@ services:
     networks:
       - selenium
     restart: on-failure
-
-  whatsapp_994704414286:
-     container_name: whatsapp_994704414286
-     image: webwhatsapp-wrapper
-     build: .
-     environment:
-       - SELENIUM=http://firefox_994704414286:4444/wd/hub
-       - MOBILE_NUMBER=994704414286
-       - IDEN_NUMBER=6
-       - DATABASE_URL       
-     volumes:
-       - ".:/app"
-       - "/media/wphotos:/wphotos"
-     command: /app/docker-entrypoint.sh
-     networks:
-       - selenium
-     depends_on:
-       - firefox_994704414286
-     restart: on-failure
-     logging:
-       driver: syslog
+    logging:
+       driver: journald
        options: 
          tag: "{{.Name}}/{{.ID}}"
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
+        reservations:
+          memory: 500M
+
+  whatsapp_994704414286:
+    container_name: whatsapp_994704414286
+    image: webwhatsapp-wrapper
+    build: .
+    environment:
+      - SELENIUM=http://firefox_994704414286:4444/wd/hub
+      - MOBILE_NUMBER=994704414286
+      - IDEN_NUMBER=6
+      - DATABASE_URL       
+    volumes:
+      - ".:/app"
+      - "/media/wphotos:/wphotos"
+    command: /app/docker-entrypoint.sh
+    networks:
+      - selenium
+    depends_on:
+      - firefox_994704414286
+    restart: on-failure
+    logging:
+      driver: journald
+      options: 
+        tag: "{{.Name}}/{{.ID}}"
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
+        reservations:
+          memory: 500M
        
 
   # 3rd mobile number
@@ -90,29 +120,45 @@ services:
     networks:
       - selenium
     restart: on-failure
-
-  whatsapp_994704414287:
-     container_name: whatsapp_994704414287
-     image: webwhatsapp-wrapper
-     build: .
-     environment:
-       - SELENIUM=http://firefox_994704414287:4444/wd/hub
-       - MOBILE_NUMBER=994704414287
-       - IDEN_NUMBER=7
-       - DATABASE_URL
-     volumes:
-       - ".:/app"
-       - "/media/wphotos:/wphotos"
-     command: /app/docker-entrypoint.sh
-     networks:
-       - selenium
-     depends_on:
-       - firefox_994704414287
-     restart: on-failure
-     logging:
-       driver: syslog
+    logging:
+       driver: journald
        options: 
          tag: "{{.Name}}/{{.ID}}"
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
+        reservations:
+          memory: 500M
+
+  whatsapp_994704414287:
+    container_name: whatsapp_994704414287
+    image: webwhatsapp-wrapper
+    build: .
+    environment:
+      - SELENIUM=http://firefox_994704414287:4444/wd/hub
+      - MOBILE_NUMBER=994704414287
+      - IDEN_NUMBER=7
+      - DATABASE_URL
+    volumes:
+      - ".:/app"
+      - "/media/wphotos:/wphotos"
+    command: /app/docker-entrypoint.sh
+    networks:
+      - selenium
+    depends_on:
+      - firefox_994704414287
+    restart: on-failure
+    logging:
+      driver: journald
+      options: 
+        tag: "{{.Name}}/{{.ID}}"
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
+        reservations:
+          memory: 500M
 
 
   # 4th mobile number
@@ -127,29 +173,46 @@ services:
     networks:
       - selenium
     restart: on-failure
-
-  whatsapp_994704414288:
-     container_name: whatsapp_994704414288
-     image: webwhatsapp-wrapper
-     build: .
-     environment:
-       - SELENIUM=http://firefox_994704414288:4444/wd/hub
-       - MOBILE_NUMBER=994704414288
-       - IDEN_NUMBER=8
-       - DATABASE_URL
-     volumes:
-       - ".:/app"
-       - "/media/wphotos:/wphotos"
-     command: /app/docker-entrypoint.sh
-     networks:
-       - selenium
-     depends_on:
-       - firefox_994704414288
-     restart: on-failure
-     logging:
-       driver: syslog
+    logging:
+       driver: journald
        options: 
          tag: "{{.Name}}/{{.ID}}"
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
+        reservations:
+          memory: 500M
+
+  whatsapp_994704414288:
+    container_name: whatsapp_994704414288
+    image: webwhatsapp-wrapper
+    build: .
+    environment:
+      - SELENIUM=http://firefox_994704414288:4444/wd/hub
+      - MOBILE_NUMBER=994704414288
+      - IDEN_NUMBER=8
+      - DATABASE_URL
+    volumes:
+      - ".:/app"
+      - "/media/wphotos:/wphotos"
+    command: /app/docker-entrypoint.sh
+    networks:
+      - selenium
+    depends_on:
+      - firefox_994704414288
+    restart: on-failure
+    logging:
+      driver: journald
+      options: 
+        tag: "{{.Name}}/{{.ID}}"
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
+        reservations:
+          memory: 500M
+
 
   # 5th mobile number
   firefox_994708394417:
@@ -163,34 +226,48 @@ services:
     networks:
       - selenium
     restart: on-failure
+    logging:
+      driver: journald
+      options: 
+        tag: "{{.Name}}/{{.ID}}"
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
+        reservations:
+          memory: 500M
 
   whatsapp_994708394417:
-     container_name: whatsapp_994708394417
-     image: webwhatsapp-wrapper
-     build: .
-     environment:
-       - SELENIUM=http://firefox_994708394417:4444/wd/hub
-       - MOBILE_NUMBER=994708394417
-       - IDEN_NUMBER=9
-       - DATABASE_URL
-     volumes:
-       - ".:/app"
-       - "/media/wphotos:/wphotos"
-     command: /app/docker-entrypoint.sh
-     networks:
-       - selenium
-     depends_on:
-       - firefox_994708394417
-     restart: on-failure
-     logging:
-       driver: syslog
-       options: 
-         tag: "{{.Name}}/{{.ID}}"  
+    container_name: whatsapp_994708394417
+    image: webwhatsapp-wrapper
+    build: .
+    environment:
+      - SELENIUM=http://firefox_994708394417:4444/wd/hub
+      - MOBILE_NUMBER=994708394417
+      - IDEN_NUMBER=9
+      - DATABASE_URL
+    volumes:
+      - ".:/app"
+      - "/media/wphotos:/wphotos"
+    command: /app/docker-entrypoint.sh
+    networks:
+      - selenium
+    depends_on:
+      - firefox_994708394417
+    restart: on-failure
+    logging:
+      driver: journald
+      options: 
+        tag: "{{.Name}}/{{.ID}}"
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
+        reservations:
+          memory: 500M  
        
-
 
 volumes:
   devshm:
-
 networks:
   selenium:
