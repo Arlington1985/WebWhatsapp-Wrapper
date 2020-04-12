@@ -151,7 +151,7 @@ try:
 
     reloaded_contacts = """SELECT id, sender_msisdn FROM whatsapp.load_earlier_messages WHERE receiver_msisdn=%s AND earlier_messages=True;"""
     activate_reload  = """UPDATE whatsapp.load_earlier_messages SET reload_start=NOW() WHERE id=%s;"""
-    deactivate_reload = """UPDATE whatsapp.load_earlier_messages SET earlier_messages=False, reload_end=NOW(), set=%s WHERE id=%s;"""
+    deactivate_reload = """UPDATE whatsapp.load_earlier_messages SET earlier_messages=False, reload_end=NOW(), note=%s WHERE id=%s;"""
     
 
     while True:
