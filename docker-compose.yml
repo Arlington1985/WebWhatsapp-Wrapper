@@ -266,6 +266,57 @@ services:
         reservations:
           memory: 500M  
        
+# Test number
+  firefox_420776858272:
+    container_name: firefox_420776858272
+    image: selenium/standalone-firefox-debug:3.14.0-curium
+    ports:
+      - "4446:4444"
+      - "5906:5900"
+    volumes:
+      - "/dev/shm:/dev/shm"
+    networks:
+      - selenium
+    restart: on-failure
+    logging:
+      driver: journald
+      options: 
+        tag: "{{.Name}}/{{.ID}}"
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
+        reservations:
+          memory: 500M
+
+  whatsapp_420776858272:
+    container_name: whatsapp_420776858272
+    image: webwhatsapp-wrapper
+    build: .
+    environment:
+      - SELENIUM=http://firefox_420776858272:4444/wd/hub
+      - MOBILE_NUMBER=420776858272
+      - IDEN_NUMBER=2
+      - DATABASE_URL
+    volumes:
+      - ".:/app"
+      - "/media/wphotos:/wphotos"
+    command: /app/docker-entrypoint.sh
+    networks:
+      - selenium
+    depends_on:
+      - firefox_420776858272
+    restart: on-failure
+    logging:
+      driver: journald
+      options: 
+        tag: "{{.Name}}/{{.ID}}"
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
+        reservations:
+          memory: 500M  
 
 volumes:
   devshm:
