@@ -18,12 +18,12 @@ services:
        driver: journald
        options: 
          tag: "{{.Name}}/{{.ID}}"
-    deploy:
-      resources:
-        limits:
-          memory: 1000M
-        reservations:
-          memory: 500M
+    #deploy:
+    #  resources:
+    #    limits:
+    #      memory: 1000M
+    #    reservations:
+    #      memory: 500M
 
   whatsapp_994704414285:
     container_name: whatsapp_994704414285
@@ -47,12 +47,12 @@ services:
       driver: journald
       options: 
         tag: "{{.Name}}/{{.ID}}"
-    deploy:
-      resources:
-        limits:
-          memory: 1000M
-        reservations:
-          memory: 500M 
+    #deploy:
+    #  resources:
+    #    limits:
+    #      memory: 1000M
+    #    reservations:
+    #      memory: 500M 
        
 
   # 2nd mobile number
@@ -71,12 +71,12 @@ services:
        driver: journald
        options: 
          tag: "{{.Name}}/{{.ID}}"
-    deploy:
-      resources:
-        limits:
-          memory: 1000M
-        reservations:
-          memory: 500M
+    #deploy:
+    #  resources:
+    #    limits:
+    #      memory: 1000M
+    #    reservations:
+    #      memory: 500M
 
   whatsapp_994704414286:
     container_name: whatsapp_994704414286
@@ -100,12 +100,12 @@ services:
       driver: journald
       options: 
         tag: "{{.Name}}/{{.ID}}"
-    deploy:
-      resources:
-        limits:
-          memory: 1000M
-        reservations:
-          memory: 500M
+    #deploy:
+    #  resources:
+    #    limits:
+    #      memory: 1000M
+    #    reservations:
+    #      memory: 500M
        
 
   # 3rd mobile number
@@ -124,12 +124,12 @@ services:
        driver: journald
        options: 
          tag: "{{.Name}}/{{.ID}}"
-    deploy:
-      resources:
-        limits:
-          memory: 1000M
-        reservations:
-          memory: 500M
+    #deploy:
+    #  resources:
+    #    limits:
+    #      memory: 1000M
+    #    reservations:
+    #      memory: 500M
 
   whatsapp_994704414287:
     container_name: whatsapp_994704414287
@@ -153,12 +153,12 @@ services:
       driver: journald
       options: 
         tag: "{{.Name}}/{{.ID}}"
-    deploy:
-      resources:
-        limits:
-          memory: 1000M
-        reservations:
-          memory: 500M
+    #deploy:
+    #  resources:
+    #    limits:
+    #      memory: 1000M
+    #    reservations:
+    #      memory: 500M
 
 
   # 4th mobile number
@@ -177,12 +177,12 @@ services:
        driver: journald
        options: 
          tag: "{{.Name}}/{{.ID}}"
-    deploy:
-      resources:
-        limits:
-          memory: 1000M
-        reservations:
-          memory: 500M
+    #deploy:
+    #  resources:
+    #    limits:
+    #      memory: 1000M
+    #    reservations:
+    #      memory: 500M
 
   whatsapp_994704414288:
     container_name: whatsapp_994704414288
@@ -206,12 +206,12 @@ services:
       driver: journald
       options: 
         tag: "{{.Name}}/{{.ID}}"
-    deploy:
-      resources:
-        limits:
-          memory: 1000M
-        reservations:
-          memory: 500M
+    #deploy:
+    #  resources:
+    #    limits:
+    #      memory: 1000M
+    #    reservations:
+    #      memory: 500M
 
 
   # 5th mobile number
@@ -230,12 +230,12 @@ services:
       driver: journald
       options: 
         tag: "{{.Name}}/{{.ID}}"
-    deploy:
-      resources:
-        limits:
-          memory: 1000M
-        reservations:
-          memory: 500M
+    #deploy:
+    #  resources:
+    #    limits:
+    #      memory: 1000M
+    #    reservations:
+    #      memory: 500M
 
   whatsapp_994708394417:
     container_name: whatsapp_994708394417
@@ -259,12 +259,12 @@ services:
       driver: journald
       options: 
         tag: "{{.Name}}/{{.ID}}"
-    deploy:
-      resources:
-        limits:
-          memory: 1000M
-        reservations:
-          memory: 500M  
+    #deploy:
+    #  resources:
+    #    limits:
+    #      memory: 1000M
+    #    reservations:
+    #      memory: 500M  
     
 volumes:
   devshm:

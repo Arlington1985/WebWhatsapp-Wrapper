@@ -18,12 +18,12 @@ services:
       driver: journald
       options: 
         tag: "{{.Name}}/{{.ID}}"
-    deploy:
-      resources:
-        limits:
-          memory: 1000M
-        reservations:
-          memory: 500M
+    #deploy:
+    #  resources:
+    #    limits:
+    #      memory: 1000M
+    #    reservations:
+    #      memory: 500M
 
   whatsapp_420776858272:
     container_name: whatsapp_420776858272
@@ -47,12 +47,12 @@ services:
       driver: journald
       options: 
         tag: "{{.Name}}/{{.ID}}"
-    deploy:
-      resources:
-        limits:
-          memory: 1000M
-        reservations:
-          memory: 500M  
+    #deploy:
+    #  resources:
+    #    limits:
+    #      memory: 1000M
+    #    reservations:
+    #      memory: 500M  
 
 volumes:
   devshm:
