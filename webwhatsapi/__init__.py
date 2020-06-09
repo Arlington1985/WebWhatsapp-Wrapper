@@ -71,7 +71,7 @@ class WhatsAPIDriver(object):
         'firstrun': "#wrapper",
         'qrCode': "img[alt=\"Scan me!\"]",
         'qrCodePlain': "div[data-ref]",
-        'mainPage': ".app.two",
+	'mainPage': '.two',
         'chatList': ".infinite-list-viewport",
         'messageList': "#main > div > div:nth-child(1) > div > div.message-list",
         'unreadMessageBar': "#main > div > div:nth-child(1) > div > div.message-list > div.msg-unread",
