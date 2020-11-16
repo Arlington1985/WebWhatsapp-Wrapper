@@ -11,9 +11,10 @@ from operator import itemgetter
 
 # Procedures
 def process_messages(messages, dirName):
-    logging.info("Loaded message count: " +str(len(messages)))
+    reverse_messages = sorted(messages, key=lambda x: x.timestamp, reverse=True) 
+    logging.info("Loaded message count: " +str(len(reverse_messages)))
     skip_count=0
-    for message in messages:
+    for message in reverse_messages:
         logging.info ('class: '+ str(message.__class__.__name__))
         logging.info ('message: '+ str(message))
         logging.info ('id: '+ str(message.id))
@@ -204,8 +205,7 @@ try:
                     
                     # Get loaded messages
                     messages=chat.get_messages()
-                    reverse_messages = sorted(messages, key=lambda x: x.timestamp, reverse=True) 
-                    process_messages(reverse_messages,dirName)
+                    process_messages(messages,dirName)
                     process_note=f"{str(len(messages))} messages reloaded for {reload_contact_row_sender}"
                 except ChatNotFoundError as err:
                     process_note=str(err)
